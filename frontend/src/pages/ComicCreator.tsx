@@ -12,7 +12,7 @@ import {
 import { auth, db } from '../firebase';
 import { collection, query, orderBy, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
 
-const API_URL = 'http://127.0.0.1:8000/api/story';
+const API_URL = 'https://comixnova-api.onrender.com/api/story';
 
 interface ComicCreatorProps {
   user: { name: string; email: string };
