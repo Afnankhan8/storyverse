@@ -1,0 +1,24 @@
+# 🔐 Environment variables (VERY IMPORTANT)
+.env
+backend/.env
+
+# 🐍 Python
+__pycache__/
+*.pyc
+backend/__pycache__/
+backend/.venv/
+
+# 📦 Node / Frontend
+node_modules/
+frontend/node_modules/
+
+# ⚡ Build files
+dist/
+frontend/dist/
+
+# 🧪 Logs
+*.log
+
+# 🖥 OS files
+.DS_Store
+Thumbs.db

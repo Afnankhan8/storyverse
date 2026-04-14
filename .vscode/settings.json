@@ -1,0 +1,6 @@
+{
+    "python-envs.defaultEnvManager": "ms-python.python:venv",
+    "css.validate": false,
+    "scss.validate": false,
+    "less.validate": false
+}
