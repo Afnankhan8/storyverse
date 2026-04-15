@@ -101,7 +101,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
   ];
 
   const testimonials = [
-    { name: 'Sarah Johnson', role: "Children's Author", text: 'Bookify AI helped me create illustrations for my book in minutes!', avatar: 'S', rating: 5 },
+    { name: 'Sarah Johnson', role: "Children's Author", text: 'comixnova helped me create illustrations for my book in minutes!', avatar: 'S', rating: 5 },
     { name: 'Mike Chen', role: 'Graphic Designer', text: 'The quality of AI-generated art is absolutely stunning.', avatar: 'M', rating: 5 },
     { name: 'Watson', role: 'Teacher', text: 'My students love creating their own comics with this tool!', avatar: 'E', rating: 5 },
   ];
@@ -137,7 +137,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
               <Sparkles size={20} className="text-white" />
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-[#8B5CF6] via-[#EC4899] to-[#06B6D4] bg-300% bg-clip-text text-transparent animate-gradient">
-              Bookify AI
+              comixnova
             </span>
           </motion.div>
 
@@ -561,7 +561,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
             </span>?
           </h2>
           <p className="text-gray-400 text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of creators already using Bookify AI to bring their stories to life
+            Join thousands of creators already using comixnova to bring their stories to life
           </p>
           <motion.button
             whileHover={{ scale: 1.05, boxShadow: '0 0 40px rgba(139,92,246,0.5)' }}
@@ -585,7 +585,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
                   <Sparkles size={14} className="text-white" />
                 </div>
                 <span className="text-lg font-bold bg-gradient-to-r from-[#8B5CF6] to-[#EC4899] bg-clip-text text-transparent">
-                  Bookify AI
+                  comixnova
                 </span>
               </div>
               <p className="text-gray-500 text-sm">Create stunning AI-powered comics in seconds</p>
@@ -616,7 +616,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
             </div>
           </div>
           <div className="pt-8 border-t border-white/10 text-center">
-            <p className="text-gray-500 text-sm">© 2025 Bookify AI. All rights reserved. Built with ❤️ for storytellers</p>
+            <p className="text-gray-500 text-sm">© 2025 comixnova. All rights reserved. Built with ❤️ for storytellers</p>
           </div>
         </div>
       </footer>
