@@ -121,7 +121,7 @@ function FlipSpread({ panel, pageNum, totalPages }: { panel: any; pageNum: numbe
   return (
     <div style={{ background: '#0f0f1a', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(139,92,246,0.2)', boxShadow: '0 40px 100px rgba(0,0,0,0.9), 0 0 60px rgba(139,92,246,0.08)' }}>
       <div style={{ background: 'linear-gradient(135deg, #0a0a14, #111120)', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(139,92,246,0.12)' }}>
-        <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '14px', letterSpacing: '8px', background: 'linear-gradient(90deg, #8B5CF6, #EC4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>BOOKIFY AI</span>
+        <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '14px', letterSpacing: '8px', background: 'linear-gradient(90deg, #8B5CF6, #EC4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>comixnova</span>
         <div style={{ display: 'flex', gap: '6px' }}>
           {['#8B5CF6', '#EC4899', '#06B6D4'].map((c, i) => (
             <div key={i} style={{ width: 9, height: 9, borderRadius: '50%', background: c, boxShadow: `0 0 6px ${c}` }} />
@@ -864,7 +864,7 @@ export default function ComicCreator({ user, onLogout }: ComicCreatorProps) {
             <div style={{ width: 40, height: 40, borderRadius: '10px', background: 'linear-gradient(135deg, #8B5CF6, #EC4899)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 16px rgba(139,92,246,0.4)' }}>
               <Sparkles size={18} color="#fff" />
             </div>
-            <span className="logo-text">BOOKIFY AI</span>
+            <span className="logo-text">comixnova</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <motion.button whileTap={{ scale: 0.95 }} onClick={() => setShowHistory(true)} className="btn-outline" style={{ position: 'relative' }}>
