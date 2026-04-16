@@ -361,24 +361,25 @@ const Navbar = ({ onGetStarted, scrolled }: NavbarProps) => {
           right: 0,
           zIndex: 1000,
           background: scrolled 
-            ? 'rgba(10, 14, 39, 0.95)' 
-            : 'transparent',
-          backdropFilter: scrolled ? 'blur(20px) saturate(180%)' : 'none',
-          borderBottom: scrolled 
-            ? `1px solid ${theme.colors.border.base}` 
+            ? 'rgba(10, 14, 39, 0.92)' 
+            : 'rgba(10, 14, 39, 0.18)',
+          backdropFilter: 'blur(24px) saturate(180%)',
+          border: scrolled 
+            ? `1px solid rgba(255, 255, 255, 0.08)` 
             : '1px solid transparent',
           transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          boxShadow: scrolled ? theme.shadows.lg : 'none',
+          boxShadow: scrolled ? theme.shadows.xl : '0 0 0 rgba(0,0,0,0)',
         }}
       >
         <div style={{
           maxWidth: '1400px',
           margin: '0 auto',
-          padding: '0 clamp(1rem, 5vw, 3rem)',
+          padding: '0.5rem clamp(1rem, 5vw, 2rem)',
           height: '80px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
+          gap: '1rem',
         }}>
           
           {/* Logo */}
@@ -429,11 +430,12 @@ const Navbar = ({ onGetStarted, scrolled }: NavbarProps) => {
             <div style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '2.5rem',
-              padding: '0.5rem 1.5rem',
-              background: theme.colors.surface.base,
-              borderRadius: theme.borderRadius.full,
-              border: `1px solid ${theme.colors.border.base}`,
+              gap: '2rem',
+              padding: '0.75rem 1.75rem',
+              background: 'rgba(255, 255, 255, 0.06)',
+              borderRadius: theme.borderRadius['2xl'],
+              border: `1px solid rgba(255, 255, 255, 0.08)`,
+              boxShadow: '0 18px 45px rgba(0, 0, 0, 0.08)',
             }}>
               {navLinks.map((link) => (
                 <motion.a
@@ -443,16 +445,17 @@ const Navbar = ({ onGetStarted, scrolled }: NavbarProps) => {
                     e.preventDefault();
                     scrollToSection(link.href);
                   }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.98 }}
                   style={{
                     position: 'relative',
-                    fontSize: '0.9375rem',
+                    fontSize: '0.95rem',
                     fontWeight: 600,
                     color: theme.colors.text.secondary,
                     textDecoration: 'none',
-                    padding: '0.5rem 0',
-                    transition: theme.transitions.normal,
+                    padding: '0.75rem 0',
+                    letterSpacing: '0.01em',
+                    transition: `${theme.transitions.normal}, color ${theme.transitions.normal}`,
                     cursor: 'pointer',
                   }}
                   onMouseEnter={(e) => {
@@ -470,9 +473,11 @@ const Navbar = ({ onGetStarted, scrolled }: NavbarProps) => {
                       position: 'absolute',
                       bottom: 0,
                       left: 0,
+                      width: '100%',
                       height: '2px',
                       background: theme.colors.gradient.primary,
                       borderRadius: '2px',
+                      opacity: 0.8,
                     }}
                   />
                 </motion.a>
