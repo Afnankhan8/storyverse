@@ -8,8 +8,8 @@
    VARIABLES
 ══════════════════════════════════════ */
 :root {
-  --violet:  #8B5CF6;
-  --pink:    #EC4899;
+  --blue:  #3B82F6;
+  --sky:    #0EA5E9;
   --cyan:    #06B6D4;
   --bg:      #07070D;
   --surface: rgba(255,255,255,0.04);
@@ -47,14 +47,14 @@
   }
 
   ::selection {
-    background: rgba(139,92,246,0.3);
+    background: rgba(59,130,246,0.3);
     color: #fff;
   }
 
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--violet), var(--pink));
+    background: linear-gradient(180deg, var(--blue), var(--sky));
     border-radius: 99px;
   }
 }
@@ -75,7 +75,7 @@
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, var(--violet), var(--pink), var(--cyan));
+    background: linear-gradient(135deg, var(--blue), var(--sky), var(--cyan));
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -89,7 +89,7 @@
     gap: 8px;
     padding: 13px 28px;
     border-radius: 14px;
-    background: linear-gradient(135deg, var(--violet), var(--pink));
+    background: linear-gradient(135deg, var(--blue), var(--sky));
     color: #fff;
     font-family: var(--font-b);
     font-weight: 700;
@@ -101,7 +101,7 @@
   }
   .btn-primary:hover {
     transform: scale(1.04);
-    box-shadow: 0 0 32px rgba(139,92,246,0.45);
+    box-shadow: 0 0 32px rgba(59,130,246,0.45);
   }
 
   .btn-secondary {
@@ -130,7 +130,7 @@
     width: 48px;
     height: 48px;
     border: 3px solid rgba(139,92,246,0.2);
-    border-top-color: var(--violet);
+    border-top-color: var(--blue);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
   }
@@ -145,7 +145,7 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--violet), var(--pink), var(--cyan));
+  background: linear-gradient(90deg, var(--blue), var(--sky), var(--cyan));
   transform-origin: left;
   z-index: 9999;
 }
@@ -191,7 +191,7 @@
   width: 32px;
   height: 32px;
   border-radius: 9px;
-  background: linear-gradient(135deg, var(--violet), var(--pink));
+  background: linear-gradient(135deg, var(--blue), var(--sky));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -212,7 +212,7 @@
   letter-spacing: -0.02em;
   white-space: nowrap;
 }
-.logo-text span { color: var(--violet); }
+.logo-text span { color: var(--blue); }
 
 .nav-links {
   display: flex;
@@ -241,7 +241,7 @@
   gap: 6px;
   padding: 9px 18px;
   border-radius: 11px;
-  background: linear-gradient(135deg, var(--violet), var(--pink));
+  background: linear-gradient(135deg, var(--blue), var(--sky));
   color: #fff;
   font-size: 13px;
   font-weight: 700;
@@ -253,7 +253,7 @@
 }
 .nav-cta:hover {
   transform: scale(1.04);
-  box-shadow: 0 0 20px rgba(139,92,246,0.4);
+  box-shadow: 0 0 20px rgba(59,130,246,0.4);
 }
 
 /* ══════════════════════════════════════
@@ -341,7 +341,7 @@
 }
 
 .typed-text {
-  background: linear-gradient(135deg, #A78BFA, #F472B6, #22D3EE);
+  background: linear-gradient(135deg, #3B82F6, #0EA5E9, #22D3EE);
   background-size: 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -351,7 +351,7 @@
 
 .type-cursor {
   display: inline-block;
-  -webkit-text-fill-color: #A78BFA;
+  -webkit-text-fill-color: #0EA5E9;
   margin-left: 2px;
   animation: blink 0.75s step-end infinite;
 }
@@ -381,7 +381,7 @@
   gap: 8px;
   padding: 14px 30px;
   border-radius: 14px;
-  background: linear-gradient(135deg, var(--violet), var(--pink));
+  background: linear-gradient(135deg, var(--blue), var(--sky));
   background-size: 200%;
   color: #fff;
   font-family: var(--font-b);
@@ -577,14 +577,14 @@
   align-items: center;
   justify-content: center;
   margin: 0 auto 10px;
-  color: var(--violet);
+  color: var(--blue);
 }
 
 .stat-value {
   font-family: var(--font-d);
   font-size: 1.8rem;
   font-weight: 800;
-  background: linear-gradient(135deg, var(--violet), var(--pink));
+  background: linear-gradient(135deg, var(--blue), var(--sky));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -652,7 +652,7 @@
 }
 
 .hl {
-  background: linear-gradient(90deg, var(--violet), var(--pink));
+  background: linear-gradient(90deg, var(--blue), var(--sky));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -804,7 +804,7 @@
   width: 58px;
   height: 58px;
   border-radius: 18px;
-  background: linear-gradient(135deg, var(--violet), var(--pink));
+  background: linear-gradient(135deg, var(--blue), var(--sky));
   display: flex;
   align-items: center;
   justify-content: center;

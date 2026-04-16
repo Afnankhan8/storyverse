@@ -42,8 +42,8 @@ load_dotenv()
 router          = APIRouter()
 client          = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 OPENAI_KEY      = os.getenv("OPENAI_API_KEY")
-http_client     = httpx.AsyncClient(timeout=60.0)
-image_semaphore = asyncio.Semaphore(6)
+http_client     = httpx.AsyncClient(timeout=90.0)  # Increased timeout for large image downloads
+image_semaphore = asyncio.Semaphore(12)  # Increased for faster parallel image generation
 FAST_MODEL      = "gemini-2.5-flash"
 STORY_MODEL     = "gemini-2.5-flash"
 
