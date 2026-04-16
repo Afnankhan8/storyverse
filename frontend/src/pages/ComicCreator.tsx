@@ -71,57 +71,47 @@ async function deleteComicFromFirestore(userId: string, comicId: string) {
   await deleteDoc(comicRef);
 }
 
-/* ── COMIC PANEL ──
-   The backend returns a fully assembled 1024×1280 JPEG:
-   artwork (780px) + separator + dialogue (300px) + separator + caption (184px).
-   We just display the image at full natural size — no extra UI layers needed.
-*/
+/* ── COMIC PANEL (unchanged) ── */
 function ComicCard({ panel, idx }: { panel: any; idx: number }) {
+  const c = ACCENT_SETS[idx % 4];
   return (
-    <div
-      className="comic-panel-print"
-      style={{
-        position: 'relative',
-        borderRadius: '8px',
-        overflow: 'hidden',          // keeps border-radius clean on the image
-        boxShadow: '0 8px 32px rgba(139,92,246,0.18)',
-        lineHeight: 0,               // removes phantom gap below inline image
-        background: '#0a0a0a',
-      }}
-    >
-      {panel?.image_url ? (
-        /* Fully assembled panel from backend — show at 100% natural height */
-        <img
-          src={panel.image_url}
-          alt={`Panel ${idx + 1}`}
-          style={{
-            width: '100%',
-            height: 'auto',
-            maxHeight: 'none',
-            display: 'block',
-            objectFit: 'contain',
-          }}
-        />
-      ) : (
-        /* Placeholder while image loads */
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '120px 40px',
-          background: `linear-gradient(145deg, ${ACCENT_SETS[idx % 4].bg}, #0a0a0a)`,
-          minHeight: '300px',
-        }}>
-          <div style={{ fontSize: '56px', marginBottom: '16px' }}>🎨</div>
-          <span style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: '13px',
-            letterSpacing: '6px',
-            color: ACCENT_SETS[idx % 4].accent,
-          }}>ART RENDERING…</span>
+    <div className="comic-panel-print" style={{
+      position: 'relative', border: '2px solid #111',
+      borderRadius: '8px', overflow: 'hidden', background: '#0a0a0a',
+      boxShadow: '0 8px 32px rgba(139,92,246,0.15)', display: 'flex', flexDirection: 'column',
+    }}>
+      <div style={{
+        position: 'relative', width: '100%', flexShrink: 0,
+        background: panel?.image_url ? '#0a0a0a' : `linear-gradient(145deg, ${c.bg}, #0a0a0a)`,
+        display: 'flex', flexDirection: 'column'
+      }}>
+        {panel?.image_url ? (
+          <img src={panel.image_url} alt={`Panel ${idx + 1}`}
+            style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'contain' }} />
+        ) : (
+          <div style={{
+            display: 'flex', flexDirection: 'column', alignItems: 'center',
+            justifyContent: 'center', padding: '120px 40px',
+            background: `linear-gradient(145deg, ${c.bg}, #0a0a0a)`,
+            minHeight: '300px'
+          }}>
+            <div style={{ fontSize: '56px', marginBottom: '16px' }}>🎨</div>
+            <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '13px', letterSpacing: '6px', color: c.accent }}>ART RENDERING…</span>
+          </div>
+        )}
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', display: 'flex', flexDirection: 'column', padding: '12px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', zIndex: 10 }}>
+            <div style={{
+              background: `linear-gradient(135deg, ${c.accent}, ${c.sfx})`,
+              color: '#fff', fontFamily: "'Bebas Neue', sans-serif", fontSize: '15px',
+              letterSpacing: '2px', padding: '4px 12px', borderRadius: '6px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.2)'
+            }}>
+              #{String(idx + 1).padStart(2, '0')}
+            </div>
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
@@ -129,41 +119,21 @@ function ComicCard({ panel, idx }: { panel: any; idx: number }) {
 /* ── FLIPBOOK ── */
 function FlipSpread({ panel, pageNum, totalPages }: { panel: any; pageNum: number; totalPages: number }) {
   return (
-    <div style={{
-      background: '#0f0f1a',
-      borderRadius: '12px',
-      // KEY FIX: overflow must NOT be hidden here — the assembled image is tall
-      overflow: 'visible',
-      border: '1px solid rgba(139,92,246,0.2)',
-      boxShadow: '0 40px 100px rgba(0,0,0,0.9), 0 0 60px rgba(139,92,246,0.08)',
-    }}>
-      {/* Header bar */}
-      <div style={{
-        background: 'linear-gradient(135deg, #0a0a14, #111120)',
-        padding: '14px 24px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        borderBottom: '1px solid rgba(139,92,246,0.12)',
-        borderRadius: '12px 12px 0 0',
-      }}>
-        <span style={{
-          fontFamily: "'Bebas Neue', sans-serif", fontSize: '14px', letterSpacing: '8px',
-          background: 'linear-gradient(90deg, #8B5CF6, #EC4899)',
-          WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-        }}>comixnova</span>
+    <div style={{ background: '#0f0f1a', borderRadius: '12px', overflow: 'hidden', border: '1px solid rgba(139,92,246,0.2)', boxShadow: '0 40px 100px rgba(0,0,0,0.9), 0 0 60px rgba(139,92,246,0.08)' }}>
+      <div style={{ background: 'linear-gradient(135deg, #0a0a14, #111120)', padding: '14px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(139,92,246,0.12)' }}>
+        <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '14px', letterSpacing: '8px', background: 'linear-gradient(90deg, #8B5CF6, #EC4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>comixnova</span>
         <div style={{ display: 'flex', gap: '6px' }}>
           {['#8B5CF6', '#EC4899', '#06B6D4'].map((c, i) => (
             <div key={i} style={{ width: 9, height: 9, borderRadius: '50%', background: c, boxShadow: `0 0 6px ${c}` }} />
           ))}
         </div>
-        <span style={{
-          fontFamily: "'Bebas Neue', sans-serif", fontSize: '13px',
-          letterSpacing: '5px', color: 'rgba(255,255,255,0.3)',
-        }}>PANEL {pageNum} / {totalPages}</span>
+        <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '13px', letterSpacing: '5px', color: 'rgba(255,255,255,0.3)' }}>PANEL {pageNum} / {totalPages}</span>
       </div>
-
-      {/* Panel image — no padding, flush display */}
-      <div style={{ background: '#111120', borderRadius: '0 0 12px 12px', overflow: 'hidden' }}>
+      <div style={{ padding: '10px', background: '#111120' }}>
         {panel && <ComicCard panel={panel} idx={pageNum - 1} />}
+      </div>
+      <div style={{ background: 'linear-gradient(135deg, #0a0a14, #111120)', padding: '10px', textAlign: 'center', borderTop: '1px solid rgba(139,92,246,0.12)' }}>
+        <span style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: '11px', letterSpacing: '10px', color: 'rgba(139,92,246,0.3)' }}>— TO BE CONTINUED —</span>
       </div>
     </div>
   );
@@ -178,7 +148,7 @@ function AISummarizer({ comic }: { comic: any }) {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const readTime = Math.max(1, Math.round(summary.split(' ').length / 130));
-  const intensity = comic.pages?.filter((p: any) => p.sound_effect || (p.action && p.action.includes('!'))).length > 2 ? 'High ⚡' : 'Moderate 🌟';
+  const intensity = comic.pages?.filter((p:any) => p.sound_effect || (p.action && p.action.includes('!'))).length > 2 ? 'High ⚡' : 'Moderate 🌟';
 
   const generateSummary = async () => {
     if (generated && summary) { setExpanded(e => !e); return; }
@@ -285,16 +255,16 @@ function AISummarizer({ comic }: { comic: any }) {
                 <div style={{ marginTop: '16px' }}>
                   <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
                     <div style={{ background: 'rgba(139,92,246,0.1)', padding: '8px 12px', borderRadius: '8px', border: '1px solid rgba(139,92,246,0.2)' }}>
-                      <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: '2px' }}>Est. Read Time</span>
-                      <span style={{ fontSize: '13px', fontWeight: 'bold' }}>~{readTime} Min</span>
+                       <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: '2px' }}>Est. Read Time</span>
+                       <span style={{ fontSize: '13px', fontWeight: 'bold' }}>~{readTime} Min</span>
                     </div>
                     <div style={{ background: 'rgba(236,72,153,0.1)', padding: '8px 12px', borderRadius: '8px', border: '1px solid rgba(236,72,153,0.2)' }}>
-                      <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: '2px' }}>Action Intensity</span>
-                      <span style={{ fontSize: '13px', fontWeight: 'bold' }}>{intensity}</span>
+                       <span style={{ fontSize: '11px', color: 'rgba(255,255,255,0.5)', display: 'block', marginBottom: '2px' }}>Action Intensity</span>
+                       <span style={{ fontSize: '13px', fontWeight: 'bold' }}>{intensity}</span>
                     </div>
                     <button onClick={toggleSpeech} style={{ background: 'rgba(6,182,212,0.1)', padding: '8px 16px', borderRadius: '8px', border: '1px solid rgba(6,182,212,0.2)', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', transition: 'all 0.2s' }}>
-                      {isPlaying ? <StopCircle size={16} color="#06B6D4" /> : <Volume2 size={16} color="#06B6D4" />}
-                      <span style={{ fontSize: '13px', fontWeight: 'bold' }}>{isPlaying ? 'Stop' : 'Listen'}</span>
+                       {isPlaying ? <StopCircle size={16} color="#06B6D4"/> : <Volume2 size={16} color="#06B6D4"/>}
+                       <span style={{ fontSize: '13px', fontWeight: 'bold' }}>{isPlaying ? 'Stop' : 'Listen'}</span>
                     </button>
                   </div>
                   <p style={{
@@ -315,7 +285,7 @@ function AISummarizer({ comic }: { comic: any }) {
   );
 }
 
-/* ── CHATBOT ── */
+/* ── CHATBOT (unchanged) ── */
 function Chatbot({ comic }: { comic: any }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<{ role: 'user' | 'bot'; text: string }[]>([
@@ -385,7 +355,8 @@ function Chatbot({ comic }: { comic: any }) {
         {!open && (
           <span style={{
             position: 'absolute', top: -4, right: -4, width: 18, height: 18,
-            borderRadius: '50%', background: '#06B6D4', border: '2px solid #07070D',
+            borderRadius: '50%', background: '#06B6D4',
+            border: '2px solid #07070D',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontFamily: "'DM Sans', sans-serif", fontSize: '9px', fontWeight: 700, color: '#fff',
           }}>AI</span>
@@ -402,15 +373,15 @@ function Chatbot({ comic }: { comic: any }) {
             style={{
               position: 'fixed', bottom: '100px', right: '28px', zIndex: 999,
               width: '340px', height: '480px',
-              background: '#0f0f1a', border: '1px solid rgba(139,92,246,0.25)',
+              background: '#0f0f1a',
+              border: '1px solid rgba(139,92,246,0.25)',
               borderRadius: '20px', overflow: 'hidden',
               boxShadow: '0 24px 80px rgba(0,0,0,0.8), 0 0 40px rgba(139,92,246,0.12)',
               display: 'flex', flexDirection: 'column',
             }}
           >
             <div style={{
-              padding: '16px 20px',
-              background: 'linear-gradient(135deg, rgba(139,92,246,0.15), rgba(236,72,153,0.08))',
+              padding: '16px 20px', background: 'linear-gradient(135deg, rgba(139,92,246,0.15), rgba(236,72,153,0.08))',
               borderBottom: '1px solid rgba(139,92,246,0.15)',
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             }}>
@@ -435,8 +406,8 @@ function Chatbot({ comic }: { comic: any }) {
                 background: ttsEnabled ? 'rgba(6, 182, 212, 0.2)' : 'rgba(255,255,255,0.05)',
                 border: `1px solid ${ttsEnabled ? 'rgba(6, 182, 212, 0.5)' : 'rgba(255,255,255,0.1)'}`,
                 color: ttsEnabled ? '#06B6D4' : 'rgba(255,255,255,0.5)',
-                borderRadius: '8px', padding: '6px', cursor: 'pointer', display: 'flex',
-              }} title={ttsEnabled ? 'Mute Bot Voice' : 'Enable Bot Voice'}>
+                borderRadius: '8px', padding: '6px', cursor: 'pointer', display: 'flex'
+              }} title={ttsEnabled ? "Mute Bot Voice" : "Enable Bot Voice"}>
                 {ttsEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
               </button>
             </div>
@@ -446,9 +417,10 @@ function Chatbot({ comic }: { comic: any }) {
                   style={{ display: 'flex', justifyContent: msg.role === 'user' ? 'flex-end' : 'flex-start' }}
                 >
                   <div style={{
-                    maxWidth: '80%', padding: '10px 14px',
-                    borderRadius: msg.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
-                    background: msg.role === 'user' ? 'linear-gradient(135deg, #8B5CF6, #EC4899)' : 'rgba(139,92,246,0.1)',
+                    maxWidth: '80%', padding: '10px 14px', borderRadius: msg.role === 'user' ? '16px 16px 4px 16px' : '16px 16px 16px 4px',
+                    background: msg.role === 'user'
+                      ? 'linear-gradient(135deg, #8B5CF6, #EC4899)'
+                      : 'rgba(139,92,246,0.1)',
                     border: msg.role === 'bot' ? '1px solid rgba(139,92,246,0.2)' : 'none',
                     fontFamily: "'DM Sans', sans-serif", fontSize: '13px', lineHeight: 1.6,
                     color: msg.role === 'user' ? '#fff' : 'rgba(255,255,255,0.85)',
@@ -483,7 +455,8 @@ function Chatbot({ comic }: { comic: any }) {
                 style={{
                   width: 40, height: 40, borderRadius: '50%', border: 'none', cursor: 'pointer',
                   background: 'linear-gradient(135deg, #8B5CF6, #EC4899)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
                 }}>
                 <Send size={15} color="#fff" />
               </motion.button>
@@ -697,6 +670,7 @@ export default function ComicCreator({ user, onLogout }: ComicCreatorProps) {
   const [history, setHistory] = useState<ComicHistoryItem[]>([]);
   const [showHistory, setShowHistory] = useState(false);
 
+  // Load history directly using auth.currentUser (more reliable)
   const loadHistory = async () => {
     const currentUser = auth.currentUser;
     if (currentUser) {
@@ -707,10 +681,15 @@ export default function ComicCreator({ user, onLogout }: ComicCreatorProps) {
     }
   };
 
-  useEffect(() => { loadHistory(); }, []);
-
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(() => { loadHistory(); });
+    loadHistory();
+  }, []);
+
+  // Reload history when user changes (login/logout)
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(() => {
+      loadHistory();
+    });
     return () => unsubscribe();
   }, []);
 
@@ -724,16 +703,20 @@ export default function ComicCreator({ user, onLogout }: ComicCreatorProps) {
       const res = await axios.post(`${API_URL}/generate`, { user_input: input });
       setComic(res.data); setCurrentPage(0);
       setViewMode('scroll');
+      
+      // Save to Firestore using the current user directly
       const currentUser = auth.currentUser;
       if (currentUser) {
         try {
           await saveComicToFirestore(currentUser.uid, res.data);
+          // Refresh history
           await loadHistory();
         } catch (saveErr) {
           console.error('Failed to save comic to Firestore:', saveErr);
           setError('Comic created but could not save to history. Check Firestore rules.');
         }
       } else {
+        console.warn('No user logged in – cannot save to Firestore');
         setError('Please log in again to save comics to your history.');
       }
     } catch (err: any) {
@@ -790,8 +773,10 @@ export default function ComicCreator({ user, onLogout }: ComicCreatorProps) {
   };
 
   const handlePrintPDF = () => {
-    setViewMode('scroll');
-    setTimeout(() => { window.print(); }, 300);
+    setViewMode('scroll'); 
+    setTimeout(() => {
+      window.print();
+    }, 300);
   };
 
   const examples = [
@@ -821,11 +806,29 @@ export default function ComicCreator({ user, onLogout }: ComicCreatorProps) {
         .btn-outline:hover { background: rgba(139,92,246,0.12); color: white; border-color: rgba(139,92,246,0.4); }
         .btn-danger { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 100px; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; color: rgba(236,72,153,0.8); background: rgba(236,72,153,0.06); border: 1px solid rgba(236,72,153,0.2); transition: all 0.18s; }
         .btn-danger:hover { background: rgba(236,72,153,0.12); color: #EC4899; border-color: rgba(236,72,153,0.4); }
-        .story-input { width: 100%; padding: 20px 24px; border-radius: 16px; resize: vertical; font-size: 18px; line-height: 1.6; outline: none; font-family: 'DM Sans', sans-serif; font-weight: 400; background: rgba(139,92,246,0.06); border: 1px solid rgba(139,92,246,0.2); color: rgba(255,255,255,0.92); caret-color: #8B5CF6; transition: border-color 0.2s, box-shadow 0.2s; }
+        /* IMPROVED INPUT TEXTAREA: larger font, better contrast */
+        .story-input { 
+          width: 100%; 
+          padding: 20px 24px; 
+          border-radius: 16px; 
+          resize: vertical; 
+          font-size: 18px; 
+          line-height: 1.6; 
+          outline: none; 
+          font-family: 'DM Sans', sans-serif; 
+          font-weight: 400; 
+          background: rgba(139,92,246,0.06); 
+          border: 1px solid rgba(139,92,246,0.2); 
+          color: rgba(255,255,255,0.92); 
+          caret-color: #8B5CF6; 
+          transition: border-color 0.2s, box-shadow 0.2s; 
+        }
         .story-input::placeholder { color: rgba(255,255,255,0.3); font-size: 16px; }
         .story-input:focus { border-color: rgba(139,92,246,0.6); box-shadow: 0 0 0 4px rgba(139,92,246,0.12); }
         .ex-card { padding: 16px; border-radius: 12px; cursor: pointer; text-align: left; background: rgba(139,92,246,0.04); border: 1px solid rgba(139,92,246,0.1); transition: all 0.2s; display: flex; align-items: flex-start; gap: 14px; }
         .ex-card:hover { background: rgba(139,92,246,0.09); border-color: rgba(139,92,246,0.3); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(139,92,246,0.15); }
+        .ex-card div div:first-child { font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.85); margin-bottom: 4px; }
+        .ex-card div div:last-child { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
         .tab-btn { padding: 10px 22px; border: none; cursor: pointer; border-radius: 100px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.5px; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
         .tab-active { background: linear-gradient(135deg, #8B5CF6, #EC4899); color: white; box-shadow: 0 4px 16px rgba(139,92,246,0.4); }
         .tab-inactive { background: transparent; color: rgba(255,255,255,0.35); }
@@ -837,13 +840,12 @@ export default function ComicCreator({ user, onLogout }: ComicCreatorProps) {
         @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
         .logo-text { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 7px; background: linear-gradient(90deg, #8B5CF6, #EC4899, #06B6D4, #8B5CF6); background-size: 200%; animation: shimmer 4s linear infinite; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(60px, 12vw, 140px); line-height: 0.88; letter-spacing: 4px; }
-
+        
         @media print {
           body { background: white !important; color: black !important; }
           .no-print, .cr-nav, .btn-generate, .tab-btn { display: none !important; }
           .cr-root { background: none !important; min-height: auto; }
-          .comic-panel-print { break-inside: avoid; border: 2px solid #ddd !important; margin-bottom: 20px !important; box-shadow: none !important; }
-          .comic-panel-print img { width: 100% !important; height: auto !important; }
+          .comic-panel-print { break-inside: avoid; border: 2px solid #ddd !important; margin-bottom: 20px !important; box-shadow: none !important; background: white !important; }
         }
       `}</style>
 
