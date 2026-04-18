@@ -34,3 +34,11 @@ app.include_router(social.router, prefix="/api/social")
 @app.get("/")
 def root():
     return {"message": "StoryVerse API is running"}
+
+
+import os
+import uvicorn
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
