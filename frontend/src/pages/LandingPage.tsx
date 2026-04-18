@@ -30,7 +30,7 @@ const staggerContainer = {
 export default function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
+
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
@@ -39,14 +39,13 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
 
   return (
     <div className="landing-page min-h-screen bg-white text-slate-900 selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden">
-      
+
       {/* 1. HEADER / NAVBAR */}
-      <header 
-        className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${
-          scrolled 
-            ? 'bg-white/80 backdrop-blur-lg border-gray-200 shadow-sm py-3' 
-            : 'bg-white border-transparent py-5'
-        }`}
+      <header
+        className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${scrolled
+          ? 'bg-white/80 backdrop-blur-lg border-gray-200 shadow-sm py-3'
+          : 'bg-white border-transparent py-5'
+          }`}
       >
         <div className="w-full px-6 lg:px-10 flex justify-between items-center">
           {/* Logo */}
@@ -88,9 +87,9 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
       {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             className="fixed inset-0 z-50 bg-white p-6 md:hidden"
           >
@@ -123,9 +122,9 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
       <section className="relative pt-32 pb-20 lg:pt-52 lg:pb-40 overflow-hidden">
         <div className="w-full px-8 lg:px-12 relative z-10">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-12 items-center">
-            
+
             {/* Hero Content */}
-            <motion.div 
+            <motion.div
               initial="hidden" animate="visible" variants={staggerContainer}
               className="w-full"
             >
@@ -133,16 +132,16 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
                 <Sparkles size={14} className="text-amber-500" />
                 <span>ComixNova 2.0 is now live</span>
               </motion.div>
-              
+
               <motion.h1 variants={fadeInUp} className="text-6xl lg:text-8xl font-extrabold tracking-tight text-gray-900 leading-[1.1] mb-6">
                 Where Great Books Are <br className="hidden lg:block" />
                 <span className="text-blue-600">Built & Discovered.</span>
               </motion.h1>
-              
+
               <motion.p variants={fadeInUp} className="text-lg lg:text-xl text-slate-500 mb-8 leading-relaxed">
                 The all-in-one publishing ecosystem. Write seamlessly, publish globally, and build your audience—all from one beautiful workspace.
               </motion.p>
-              
+
               <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4">
                 <button onClick={onGetStarted} className="bg-blue-600 text-white px-8 py-4 rounded-full text-base font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/25 flex items-center justify-center gap-2 group">
                   Start Publishing
@@ -156,8 +155,8 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
 
               <motion.div variants={fadeInUp} className="mt-10 flex items-center gap-4 text-sm text-slate-500">
                 <div className="flex -space-x-2">
-                  {[1,2,3,4].map(i => (
-                    <img key={i} src={`https://i.pravatar.cc/100?img=${i+10}`} className="w-8 h-8 rounded-full border-2 border-white object-cover" alt="User" />
+                  {[1, 2, 3, 4].map(i => (
+                    <img key={i} src={`https://i.pravatar.cc/100?img=${i + 10}`} className="w-8 h-8 rounded-full border-2 border-white object-cover" alt="User" />
                   ))}
                 </div>
                 <div className="flex items-center gap-1">
@@ -186,7 +185,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
                 {/* Back book */}
                 <motion.div
                   animate={{ y: [0, -8, 0] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+                  transition={{ duration: 6, repeat: Infinity, delay: 0.5 }}
                   className="w-[120px] h-[170px] rounded-xl overflow-hidden shadow-2xl shadow-slate-400/30 flex-shrink-0 transform -rotate-6 -mb-4"
                 >
                   <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=300&q=80" alt="Novel" className="w-full h-full object-cover" />
@@ -194,7 +193,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
                 {/* Front center book — largest */}
                 <motion.div
                   animate={{ y: [0, -12, 0] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                  transition={{ duration: 5, repeat: Infinity, }}
                   className="w-[160px] h-[230px] rounded-xl overflow-hidden shadow-2xl shadow-blue-400/20 flex-shrink-0 relative z-10"
                 >
                   <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=80" alt="Book" className="w-full h-full object-cover" />
@@ -212,7 +211,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
                 {/* Right book */}
                 <motion.div
                   animate={{ y: [0, -6, 0] }}
-                  transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                  transition={{ duration: 7, repeat: Infinity, delay: 1 }}
                   className="w-[120px] h-[170px] rounded-xl overflow-hidden shadow-2xl shadow-slate-400/30 flex-shrink-0 transform rotate-6 -mb-4"
                 >
                   <img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=300&q=80" alt="Comic" className="w-full h-full object-cover" />
@@ -222,7 +221,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
               {/* Genre tags floating */}
               <motion.div
                 animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
+                transition={{ duration: 4, repeat: Infinity, delay: 0.3 }}
                 className="absolute top-8 left-8 bg-white rounded-2xl shadow-lg border border-gray-100 px-4 py-3"
               >
                 <div className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Trending Genres</div>
@@ -236,7 +235,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
               {/* Reader count badge */}
               <motion.div
                 animate={{ y: [0, 10, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
+                transition={{ duration: 5, repeat: Infinity, delay: 0.8 }}
                 className="absolute bottom-10 right-6 bg-white rounded-2xl shadow-xl border border-gray-100 px-4 py-3 flex items-center gap-3"
               >
                 <div className="flex -space-x-1.5">
@@ -273,7 +272,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
         <div className="w-full px-8 lg:px-12">
           <div className="text-center  mx-auto mb-16">
             <h2 className="text-4xl md:text-6xl font-extrabold text-gray-900 tracking-tight mb-6">
-              Everything you need to build <br/> a publishing empire.
+              Everything you need to build <br /> a publishing empire.
             </h2>
             <p className="text-lg text-slate-500">
               We’ve stripped away the complexity of traditional publishing and replaced it with elegant, powerful tools designed for the modern internet.
@@ -289,7 +288,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
               { icon: Zap, title: 'AI Copilot', desc: 'Overcome writer\'s block. Generate ideas, summarize chapters, and refine your prose with our built-in AI.' },
               { icon: CheckCircle2, title: 'Bank-grade Security', desc: 'Your intellectual property is protected with enterprise-grade encryption and automated cloud backups.' }
             ].map((feature, idx) => (
-              <motion.div 
+              <motion.div
                 key={idx}
                 whileHover={{ y: -5 }}
                 className="bg-slate-50 rounded-2xl p-8 border border-gray-100 hover:border-blue-100 hover:bg-blue-50/50 transition-all group"
@@ -309,7 +308,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
       <section className="py-28 lg:py-36 bg-gray-900 text-white relative overflow-hidden">
         {/* Subtle background glow */}
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
-        
+
         <div className="w-full px-8 lg:px-12 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-extrabold mb-4">The smoothest path to publishing</h2>
@@ -355,7 +354,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
               <p className="text-lg text-slate-500 mb-8 leading-relaxed">
                 Everything a modern author needs — a beautiful editor, one-click publishing, and a built-in audience of passionate readers who are waiting for your next story.
               </p>
-              
+
               <ul className="space-y-6">
                 {[
                   { title: 'Distraction-free writing', desc: 'A clean, focused editor that feels like your favorite notebook. Write in flow state.' },
@@ -373,24 +372,24 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
                   </li>
                 ))}
               </ul>
-              
+
               <button onClick={onGetStarted} className="mt-10 bg-blue-600 text-white px-7 py-3.5 rounded-full font-semibold flex items-center gap-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 w-fit">
                 Start Writing Free <ArrowRight size={18} />
               </button>
             </div>
-            
+
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-br from-blue-50 to-slate-50 rounded-3xl transform rotate-2" />
               {/* Open book / reading scene */}
-              <img 
-                src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=1000" 
-                alt="Author Writing" 
+              <img
+                src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=1000"
+                alt="Author Writing"
                 className="relative rounded-2xl shadow-2xl border border-gray-100 object-cover h-[500px] w-full"
               />
               {/* Floating reading card */}
-              <motion.div 
+              <motion.div
                 animate={{ y: [0, -12, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                transition={{ duration: 5, repeat: Infinity, }}
                 className="absolute -left-6 bottom-12 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 w-52"
               >
                 <div className="flex items-center gap-2 mb-3">
@@ -403,7 +402,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
                   </div>
                 </div>
                 <div className="flex gap-0.5 mb-1">
-                  {[1,2,3,4,5].map(s => <Star key={s} size={10} className="fill-amber-500 text-amber-500" />)}
+                  {[1, 2, 3, 4, 5].map(s => <Star key={s} size={10} className="fill-amber-500 text-amber-500" />)}
                 </div>
                 <div className="text-xs text-slate-500">"A masterpiece of modern fiction."</div>
               </motion.div>
@@ -460,7 +459,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
               {/* Floating highlight note */}
               <motion.div
                 animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                transition={{ duration: 4, repeat: Infinity, }}
                 className="absolute -right-4 top-16 bg-amber-50 border border-amber-200 rounded-2xl shadow-lg px-4 py-3 w-48"
               >
                 <div className="text-xs font-bold text-amber-800 mb-1">📌 Your Highlight</div>
@@ -525,7 +524,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
             {[1, 2, 3, 4, 5].map(i => (
               <div key={i} className="group cursor-pointer">
                 <div className="relative aspect-[2/3] rounded-xl overflow-hidden mb-4 shadow-sm group-hover:shadow-xl transition-all duration-300">
-                  <img src={`https://picsum.photos/seed/${i+100}/400/600`} alt="Book Cover" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src={`https://picsum.photos/seed/${i + 100}/400/600`} alt="Book Cover" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
                 <h4 className="font-bold text-gray-900 truncate">The Echoes of Time</h4>
@@ -546,7 +545,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
             <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">Loved by authors globally.</h2>
             <p className="text-lg text-slate-500">Don't just take our word for it.</p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-10">
             {[
               { name: 'Sarah Jenkins', role: 'Bestselling Sci-Fi Author', text: 'ComixNova completely changed my workflow. The dashboard is intuitive, and the payouts are instant. I moved my entire catalog here.' },
@@ -631,7 +630,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
         <div className="absolute inset-0 bg-blue-600/5" />
         <div className=" px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <h2 className="text-6xl md:text-7xl font-extrabold text-gray-900 mb-8 tracking-tight">
-            Your Story Deserves <br className="hidden md:block"/> the World.
+            Your Story Deserves <br className="hidden md:block" /> the World.
           </h2>
           <p className="text-xl text-slate-500 mb-10 ">
             Join thousands of authors who are building their legacy on the most advanced publishing platform ever created.
@@ -667,7 +666,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
                 <a href="#" className="text-slate-400 hover:text-white transition-colors"><Users size={20} /></a>
               </div>
             </div>
-            
+
             <div>
               <h4 className="text-white font-semibold mb-4">Product</h4>
               <ul className="space-y-2 text-sm">
@@ -677,7 +676,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
                 <li><a href="#" className="hover:text-white transition-colors">Reader App</a></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="text-white font-semibold mb-4">Resources</h4>
               <ul className="space-y-2 text-sm">
@@ -687,7 +686,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
                 <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="text-white font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-sm">
@@ -698,7 +697,7 @@ export default function LandingPage({ onGetStarted }: { onGetStarted: () => void
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
             <p>© 2026 ComixNova Inc. All rights reserved.</p>
             <div className="flex gap-6">

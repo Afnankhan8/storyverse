@@ -47,7 +47,7 @@ const fadeIn = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: "easeInOut"0.4, 0, 0.2, 1] }
+    transition: { duration: 0.4, }
   }
 };
 
@@ -97,32 +97,32 @@ function BarChart({
                 transition={{
                   duration: 0.8,
                   delay: i * 0.1,
-                  ease: "easeInOut"0.4, 0, 0.2, 1]
-                }}
-              className="w-full rounded-t-xl relative overflow-hidden cursor-pointer"
-              style={{
-                backgroundColor: color,
-                minHeight: '8px',
-                boxShadow: `0 4px 14px -4px ${color}40`
-              }}
-              >
-              {/* Shimmer effect */}
-              <div
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                style={{
-                  background: `linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%)`
-                }}
-              />
-            </motion.div>
-          </div>
 
-            {/* Label */ }
-        <span className="text-[11px] font-semibold text-slate-500">
-          {labels[i]}
-        </span>
+                }}
+                className="w-full rounded-t-xl relative overflow-hidden cursor-pointer"
+                style={{
+                  backgroundColor: color,
+                  minHeight: '8px',
+                  boxShadow: `0 4px 14px -4px ${color}40`
+                }}
+              >
+                {/* Shimmer effect */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{
+                    background: `linear-gradient(180deg, rgba(255,255,255,0.3) 0%, transparent 100%)`
+                  }}
+                />
+              </motion.div>
+            </div>
+
+            {/* Label */}
+            <span className="text-[11px] font-semibold text-slate-500">
+              {labels[i]}
+            </span>
           </div>
-  );
-})}
+        );
+      })}
     </div >
   );
 }
@@ -181,7 +181,7 @@ function LineChart({
         strokeLinejoin="round"
         initial={{ pathLength: 0 }}
         animate={{ pathLength: 1 }}
-        transition={{ duration: 1.5, ease: 'easeOut' }}
+        transition={{ duration: 1.5 }}
       />
 
       {/* Dots */}
@@ -242,7 +242,7 @@ function ProgressRing({
           strokeDasharray={circumference}
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1.5, ease: "easeInOut"0.4, 0, 0.2, 1], delay: 0.3 }}
+          transition={{ duration: 1.5, delay: 0.3 }}
         />
       </svg>
 
@@ -744,15 +744,15 @@ export default function AnalyticsDashboard({ user, onLogout }: Props) {
                                   transition={{
                                     duration: 1,
                                     delay: 0.5 + index * 0.1,
-                                    ease: "easeInOut"0.4, 0, 0.2, 1]
+
                                   }}
-                                className="h-full rounded-full"
-                                style={{
-                                  background:
-                                    index === 0
-                                      ? 'linear-gradient(90deg, #FBBF24, #F59E0B)'
-                                      : 'linear-gradient(90deg, #0EA5E9, #06B6D4)'
-                                }}
+                                  className="h-full rounded-full"
+                                  style={{
+                                    background:
+                                      index === 0
+                                        ? 'linear-gradient(90deg, #FBBF24, #F59E0B)'
+                                        : 'linear-gradient(90deg, #0EA5E9, #06B6D4)'
+                                  }}
                                 />
                               </div>
                               <span className="text-[11px] text-slate-500 font-medium">

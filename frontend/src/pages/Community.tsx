@@ -53,7 +53,7 @@ const TAG_COLORS: Record<string, string> = {
 };
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
-const fadeUp = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeInOut"0.16, 1, 0.3, 1] } } };
+const fadeUp = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.4, } } };
 
 export default function Community({ user, onLogout }: Props) {
   const [search, setSearch] = useState('');

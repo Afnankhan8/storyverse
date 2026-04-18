@@ -331,7 +331,7 @@ export default function PublishStory({ user, onLogout }: { user?: any; onLogout?
                       strokeLinecap="round"
                       strokeDasharray={2 * Math.PI * 20}
                       animate={{ strokeDashoffset: 2 * Math.PI * 20 * (1 - progressPercent / 100) }}
-                      transition={{ duration: 0.4, ease: 'easeOut' }}
+                      transition={{ duration: 0.4 }}
                       style={{ filter: 'drop-shadow(0 0 6px rgba(20,184,166,0.5))' }}
                     />
                   </svg>
@@ -718,7 +718,7 @@ export default function PublishStory({ user, onLogout }: { user?: any; onLogout?
                   <>
                     <motion.div
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                      transition={{ duration: 1, repeat: Infinity, }}
                       className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
                     />
                     Submitting…

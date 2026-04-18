@@ -185,7 +185,7 @@ function GeneratingScreen() {
     <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
       <div style={{ maxWidth: '540px', textAlign: 'center' }}>
         <div style={{ position: 'relative', width: '150px', height: '150px', margin: '0 auto 2rem' }}>
-          <motion.div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: `2px solid ${theme.colors.primary}`, borderTopColor: 'transparent' }} animate={{ rotate: 360 }} transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }} />
+          <motion.div style={{ position: 'absolute', inset: 0, borderRadius: '50%', border: `2px solid ${theme.colors.primary}`, borderTopColor: 'transparent' }} animate={{ rotate: 360 }} transition={{ duration: 1.5, repeat: Infinity, }} />
           <div style={{ position: 'absolute', inset: '30px', borderRadius: '50%', background: theme.colors.gradient.primary, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: theme.shadows.glow }}><span style={{ fontSize: '2rem' }}>{steps[step].icon}</span></div>
         </div>
         <AnimatePresence mode="wait">
@@ -277,97 +277,97 @@ export default function ComicCreator({ user, onLogout }: ComicCreatorProps) {
 
   return (
     <AppShell user={user} onLogout={onLogout}>
-        <HistorySidebar history={history} open={showHistory} onClose={() => setShowHistory(false)} onLoad={(c) => { setComic(c); setCurrentPage(0); setLiked(false); }} onDelete={deleteComic} />
+      <HistorySidebar history={history} open={showHistory} onClose={() => setShowHistory(false)} onLoad={(c) => { setComic(c); setCurrentPage(0); setLiked(false); }} onDelete={deleteComic} />
 
-        <div style={{ position: 'relative', zIndex: 2 }}>
-          <AnimatePresence mode="wait">
-            {!comic && !generating && (
-              <motion.div key="input" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }}>
-                <div className="container" style={{ padding: '4rem 2rem', maxWidth: '900px', margin: '0 auto' }}>
-                  <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                    <span className="badge"><Sparkles size={14} /> AI COMIC STUDIO</span>
-                    <h1 className="heading-xl" style={{ marginTop: '1rem' }}>Create Your <span className="text-gradient">Epic Comic</span></h1>
-                    <p style={{ color: theme.colors.text.muted, maxWidth: '600px', margin: '1rem auto' }}>Describe your hero's adventure — our AI writes the script and draws every panel in seconds.</p>
-                    <button onClick={() => setShowHistory(true)} className="btn-secondary" style={{ marginTop: '1rem', padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
-                      <History size={14} /> View My Saved Comics {history.length > 0 && `(${history.length})`}
-                    </button>
-                  </div>
-                  <div className="glass-card" style={{ padding: '2rem' }}>
-                    <textarea rows={5} className="story-input" style={{ width: '100%', padding: '1rem', borderRadius: theme.radius.md, background: theme.colors.surface.base, border: `1px solid ${theme.colors.border.base}`, color: theme.colors.text.primary, fontSize: '1rem', resize: 'vertical' }} placeholder="I am Ryo, a boy who controls lightning. I must stop the Shadow Dragon before midnight..." value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => (e.metaKey || e.ctrlKey) && e.key === 'Enter' && generateComic()} />
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '0.75rem', margin: '1.5rem 0' }}>
-                      {examples.map(ex => (
-                        <button key={ex.label} onClick={() => setInput(ex.text)} className="btn-secondary" style={{ justifyContent: 'flex-start', gap: '0.75rem', textAlign: 'left' }}><span style={{ fontSize: '1.5rem' }}>{ex.emoji}</span> {ex.label}</button>
-                      ))}
-                    </div>
-                    {error && <div style={{ padding: '0.75rem', marginBottom: '1rem', borderRadius: theme.radius.md, background: 'rgba(239,68,68,0.1)', border: `1px solid ${theme.colors.danger}`, color: theme.colors.danger }}>{error}</div>}
-                    <button onClick={generateComic} className="btn-primary" style={{ width: '100%' }}><Wand2 size={18} /> Generate My Comic</button>
-                    <p style={{ marginTop: '1rem', fontSize: '0.75rem', textAlign: 'center', color: theme.colors.text.muted }}>⌘ + Enter to generate</p>
-                  </div>
+      <div style={{ position: 'relative', zIndex: 2 }}>
+        <AnimatePresence mode="wait">
+          {!comic && !generating && (
+            <motion.div key="input" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }}>
+              <div className="container" style={{ padding: '4rem 2rem', maxWidth: '900px', margin: '0 auto' }}>
+                <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+                  <span className="badge"><Sparkles size={14} /> AI COMIC STUDIO</span>
+                  <h1 className="heading-xl" style={{ marginTop: '1rem' }}>Create Your <span className="text-gradient">Epic Comic</span></h1>
+                  <p style={{ color: theme.colors.text.muted, maxWidth: '600px', margin: '1rem auto' }}>Describe your hero's adventure — our AI writes the script and draws every panel in seconds.</p>
+                  <button onClick={() => setShowHistory(true)} className="btn-secondary" style={{ marginTop: '1rem', padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
+                    <History size={14} /> View My Saved Comics {history.length > 0 && `(${history.length})`}
+                  </button>
                 </div>
-              </motion.div>
-            )}
-
-            {generating && (
-              <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                <GeneratingScreen />
-              </motion.div>
-            )}
-
-            {comic && !generating && (
-              <motion.div key="comic" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="container" style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto' }}>
-                <AISummarizer comic={comic} />
-
-                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '1rem', marginBottom: '2rem' }}>
-                  <div>
-                    <div className="badge" style={{ marginBottom: '0.75rem' }}><Star size={14} /> Now Reading</div>
-                    <h2 className="heading-lg">{comic.ingredients?.hero_name || 'Your'}<span className="text-gradient"> Adventure</span></h2>
-                    <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}><Zap size={14} color={theme.colors.text.muted} /> {comic.pages?.length} panels · {comic.ingredients?.mood || 'Epic'}</div>
+                <div className="glass-card" style={{ padding: '2rem' }}>
+                  <textarea rows={5} className="story-input" style={{ width: '100%', padding: '1rem', borderRadius: theme.radius.md, background: theme.colors.surface.base, border: `1px solid ${theme.colors.border.base}`, color: theme.colors.text.primary, fontSize: '1rem', resize: 'vertical' }} placeholder="I am Ryo, a boy who controls lightning. I must stop the Shadow Dragon before midnight..." value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => (e.metaKey || e.ctrlKey) && e.key === 'Enter' && generateComic()} />
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: '0.75rem', margin: '1.5rem 0' }}>
+                    {examples.map(ex => (
+                      <button key={ex.label} onClick={() => setInput(ex.text)} className="btn-secondary" style={{ justifyContent: 'flex-start', gap: '0.75rem', textAlign: 'left' }}><span style={{ fontSize: '1.5rem' }}>{ex.emoji}</span> {ex.label}</button>
+                    ))}
                   </div>
-                  <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                    <div style={{ display: 'flex', gap: '0.25rem', background: theme.colors.surface.base, borderRadius: theme.radius.full, padding: '0.25rem' }}>
-                      <button onClick={() => setViewMode('scroll')} className={`tab-btn ${viewMode === 'scroll' ? 'tab-active' : 'tab-inactive'}`} style={{ padding: '0.5rem 1rem', borderRadius: theme.radius.full }}><Tablet size={14} /> Scroll</button>
-                      <button onClick={() => setViewMode('flipbook')} className={`tab-btn ${viewMode === 'flipbook' ? 'tab-active' : 'tab-inactive'}`} style={{ padding: '0.5rem 1rem', borderRadius: theme.radius.full }}><Book size={14} /> Flipbook</button>
-                    </div>
-                    <button onClick={() => setLiked(l => !l)} className="btn-secondary" style={{ padding: '0.5rem 1rem' }}><Heart size={14} color={liked ? theme.colors.danger : undefined} fill={liked ? theme.colors.danger : 'none'} /> {liked ? 'Liked' : 'Like'}</button>
-                    <button onClick={handlePrintPDF} className="btn-secondary" style={{ padding: '0.5rem 1rem' }}><Printer size={14} /> Print</button>
-                    <button onClick={() => setShowHistory(true)} className="btn-secondary no-print" style={{ marginBottom: '1rem' }}><History size={18} /> My Comics</button>
-                    <button onClick={handleDownloadText} className="btn-secondary no-print"><Download size={18} /> Script</button>
-                    <button onClick={() => navigate('/publish/new', { state: { story: comic } })} className="btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
-                      <Globe size={14} /> Publish to Hub
-                    </button>
-                  </div>
+                  {error && <div style={{ padding: '0.75rem', marginBottom: '1rem', borderRadius: theme.radius.md, background: 'rgba(239,68,68,0.1)', border: `1px solid ${theme.colors.danger}`, color: theme.colors.danger }}>{error}</div>}
+                  <button onClick={generateComic} className="btn-primary" style={{ width: '100%' }}><Wand2 size={18} /> Generate My Comic</button>
+                  <p style={{ marginTop: '1rem', fontSize: '0.75rem', textAlign: 'center', color: theme.colors.text.muted }}>⌘ + Enter to generate</p>
                 </div>
+              </div>
+            </motion.div>
+          )}
 
+          {generating && (
+            <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <GeneratingScreen />
+            </motion.div>
+          )}
 
-                {viewMode === 'flipbook' && (
-                  <div style={{ position: 'relative' }}>
-                    <AnimatePresence mode="wait">
-                      <motion.div key={currentPage} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
-                        <FlipSpread panel={comic.pages[currentPage]} pageNum={currentPage + 1} totalPages={comic.pages.length} />
-                      </motion.div>
-                    </AnimatePresence>
-                    <button onClick={prevPage} disabled={currentPage === 0} className="page-nav" style={{ position: 'absolute', left: '-1rem', top: '50%', transform: 'translateY(-50%)', background: theme.colors.surface.base, border: `1px solid ${theme.colors.border.base}`, borderRadius: '50%', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><ChevronLeft size={20} /></button>
-                    <button onClick={nextPage} disabled={currentPage >= comic.pages.length - 1} className="page-nav" style={{ position: 'absolute', right: '-1rem', top: '50%', transform: 'translateY(-50%)', background: theme.colors.surface.base, border: `1px solid ${theme.colors.border.base}`, borderRadius: '50%', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><ChevronRight size={20} /></button>
-                    <div style={{ textAlign: 'center', marginTop: '2rem' }}><span style={{ fontSize: '0.75rem', color: theme.colors.text.muted }}>PANEL {currentPage + 1} / {comic.pages.length} · Use arrow keys</span></div>
-                  </div>
-                )}
+          {comic && !generating && (
+            <motion.div key="comic" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="container" style={{ padding: '2rem', maxWidth: '900px', margin: '0 auto' }}>
+              <AISummarizer comic={comic} />
 
-                {viewMode === 'scroll' && (
-                  <div className="glass-card" style={{ overflow: 'hidden', padding: '1rem' }}>
-                    {comic.pages?.map((panel: any, idx: number) => <ComicCard key={idx} panel={panel} idx={idx} />)}
-                    <div style={{ textAlign: 'center', padding: '1rem', borderTop: `1px solid ${theme.colors.border.base}`, fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '4px', color: theme.colors.text.light }}>— THE END —</div>
-                  </div>
-                )}
-
-                <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-                  <button onClick={() => { setComic(null); setInput(''); }} className="btn-primary"><Play size={18} /> Create Another Comic</button>
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '1rem', marginBottom: '2rem' }}>
+                <div>
+                  <div className="badge" style={{ marginBottom: '0.75rem' }}><Star size={14} /> Now Reading</div>
+                  <h2 className="heading-lg">{comic.ingredients?.hero_name || 'Your'}<span className="text-gradient"> Adventure</span></h2>
+                  <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}><Zap size={14} color={theme.colors.text.muted} /> {comic.pages?.length} panels · {comic.ingredients?.mood || 'Epic'}</div>
                 </div>
+                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', gap: '0.25rem', background: theme.colors.surface.base, borderRadius: theme.radius.full, padding: '0.25rem' }}>
+                    <button onClick={() => setViewMode('scroll')} className={`tab-btn ${viewMode === 'scroll' ? 'tab-active' : 'tab-inactive'}`} style={{ padding: '0.5rem 1rem', borderRadius: theme.radius.full }}><Tablet size={14} /> Scroll</button>
+                    <button onClick={() => setViewMode('flipbook')} className={`tab-btn ${viewMode === 'flipbook' ? 'tab-active' : 'tab-inactive'}`} style={{ padding: '0.5rem 1rem', borderRadius: theme.radius.full }}><Book size={14} /> Flipbook</button>
+                  </div>
+                  <button onClick={() => setLiked(l => !l)} className="btn-secondary" style={{ padding: '0.5rem 1rem' }}><Heart size={14} color={liked ? theme.colors.danger : undefined} fill={liked ? theme.colors.danger : 'none'} /> {liked ? 'Liked' : 'Like'}</button>
+                  <button onClick={handlePrintPDF} className="btn-secondary" style={{ padding: '0.5rem 1rem' }}><Printer size={14} /> Print</button>
+                  <button onClick={() => setShowHistory(true)} className="btn-secondary no-print" style={{ marginBottom: '1rem' }}><History size={18} /> My Comics</button>
+                  <button onClick={handleDownloadText} className="btn-secondary no-print"><Download size={18} /> Script</button>
+                  <button onClick={() => navigate('/publish/new', { state: { story: comic } })} className="btn-primary" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
+                    <Globe size={14} /> Publish to Hub
+                  </button>
+                </div>
+              </div>
 
-                <Chatbot comic={comic} />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+
+              {viewMode === 'flipbook' && (
+                <div style={{ position: 'relative' }}>
+                  <AnimatePresence mode="wait">
+                    <motion.div key={currentPage} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: 0.3 }}>
+                      <FlipSpread panel={comic.pages[currentPage]} pageNum={currentPage + 1} totalPages={comic.pages.length} />
+                    </motion.div>
+                  </AnimatePresence>
+                  <button onClick={prevPage} disabled={currentPage === 0} className="page-nav" style={{ position: 'absolute', left: '-1rem', top: '50%', transform: 'translateY(-50%)', background: theme.colors.surface.base, border: `1px solid ${theme.colors.border.base}`, borderRadius: '50%', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><ChevronLeft size={20} /></button>
+                  <button onClick={nextPage} disabled={currentPage >= comic.pages.length - 1} className="page-nav" style={{ position: 'absolute', right: '-1rem', top: '50%', transform: 'translateY(-50%)', background: theme.colors.surface.base, border: `1px solid ${theme.colors.border.base}`, borderRadius: '50%', width: 40, height: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><ChevronRight size={20} /></button>
+                  <div style={{ textAlign: 'center', marginTop: '2rem' }}><span style={{ fontSize: '0.75rem', color: theme.colors.text.muted }}>PANEL {currentPage + 1} / {comic.pages.length} · Use arrow keys</span></div>
+                </div>
+              )}
+
+              {viewMode === 'scroll' && (
+                <div className="glass-card" style={{ overflow: 'hidden', padding: '1rem' }}>
+                  {comic.pages?.map((panel: any, idx: number) => <ComicCard key={idx} panel={panel} idx={idx} />)}
+                  <div style={{ textAlign: 'center', padding: '1rem', borderTop: `1px solid ${theme.colors.border.base}`, fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '4px', color: theme.colors.text.light }}>— THE END —</div>
+                </div>
+              )}
+
+              <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+                <button onClick={() => { setComic(null); setInput(''); }} className="btn-primary"><Play size={18} /> Create Another Comic</button>
+              </div>
+
+              <Chatbot comic={comic} />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </AppShell>
   );
 }

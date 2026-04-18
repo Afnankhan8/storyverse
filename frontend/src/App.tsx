@@ -93,8 +93,8 @@ function AppRoutes() {
     );
   }
 
-  const guard = (el: JSX.Element) => user ? el : <Navigate to="/login" />;
-  const superGuard = (el: JSX.Element) => (user?.email === 'superadmin@comixnova.ai') ? el : <Navigate to="/" />;
+  const guard = (el: React.ReactNode) => user ? el : <Navigate to="/login" />;
+  const superGuard = (el: React.ReactNode) => (user?.email === 'superadmin@comixnova.ai') ? el : <Navigate to="/" />;
 
   return (
     <AnimatePresence mode="wait">
@@ -106,34 +106,34 @@ function AppRoutes() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         {/* ── Premium Authenticated App ── */}
-        <Route path="/dashboard"     element={guard(<Dashboard     user={user} onLogout={handleLogout} />)} />
-        <Route path="/library"       element={guard(<Library        user={user} onLogout={handleLogout} />)} />
-        <Route path="/upload"        element={guard(<UploadBook     user={user} onLogout={handleLogout} />)} />
-        <Route path="/notes"         element={guard(<Notes          user={user} onLogout={handleLogout} />)} />
-        <Route path="/collaboration" element={guard(<Collaboration  user={user} onLogout={handleLogout} />)} />
-        <Route path="/community"     element={guard(<Community      user={user} onLogout={handleLogout} />)} />
-        <Route path="/analytics"     element={guard(<AnalyticsDashboard user={user} onLogout={handleLogout} />)} />
-        <Route path="/settings"      element={guard(<SettingsPage   user={user} onLogout={handleLogout} />)} />
-        <Route path="/bookshelf"     element={guard(<Bookshelf      user={user} onLogout={handleLogout} />)} />
-        <Route path="/studio"        element={guard(<BookStudio     user={user} onLogout={handleLogout} />)} />
-        <Route path="/creator"       element={guard(<ComicCreator   user={user} onLogout={handleLogout} />)} />
+        <Route path="/dashboard" element={guard(<Dashboard user={user} onLogout={handleLogout} />)} />
+        <Route path="/library" element={guard(<Library user={user} onLogout={handleLogout} />)} />
+        <Route path="/upload" element={guard(<UploadBook user={user} onLogout={handleLogout} />)} />
+        <Route path="/notes" element={guard(<Notes user={user} onLogout={handleLogout} />)} />
+        <Route path="/collaboration" element={guard(<Collaboration user={user} onLogout={handleLogout} />)} />
+        <Route path="/community" element={guard(<Community user={user} onLogout={handleLogout} />)} />
+        <Route path="/analytics" element={guard(<AnalyticsDashboard user={user} onLogout={handleLogout} />)} />
+        <Route path="/settings" element={guard(<SettingsPage user={user} onLogout={handleLogout} />)} />
+        <Route path="/bookshelf" element={guard(<Bookshelf user={user} onLogout={handleLogout} />)} />
+        <Route path="/studio" element={guard(<BookStudio user={user} onLogout={handleLogout} />)} />
+        <Route path="/creator" element={guard(<ComicCreator user={user} onLogout={handleLogout} />)} />
         <Route path="/notifications" element={guard(<NotificationsPage user={user} onLogout={handleLogout} />)} />
 
         {/* ── Hub / Discovery ── */}
-        <Route path="/hub"           element={<HubFeed user={user} onLogout={handleLogout} />} />
-        <Route path="/store"         element={<MarketplacePage user={user} onLogout={handleLogout} />} />
-        <Route path="/help"          element={<HelpCenterPage user={user} onLogout={handleLogout} />} />
-        <Route path="/terms"         element={<TermsPage user={user} onLogout={handleLogout} />} />
-        <Route path="/privacy"       element={<PrivacyPage user={user} onLogout={handleLogout} />} />
+        <Route path="/hub" element={<HubFeed user={user} onLogout={handleLogout} />} />
+        <Route path="/store" element={<MarketplacePage user={user} onLogout={handleLogout} />} />
+        <Route path="/help" element={<HelpCenterPage user={user} onLogout={handleLogout} />} />
+        <Route path="/terms" element={<TermsPage user={user} onLogout={handleLogout} />} />
+        <Route path="/privacy" element={<PrivacyPage user={user} onLogout={handleLogout} />} />
 
         {/* ── Book routes ── */}
-        <Route path="/book/:id"      element={<ComicReader />} />
-        <Route path="/@:username"    element={<CreatorProfile />} />
-        <Route path="/edit/:id"      element={guard(<EditStory user={user} />)} />
-        <Route path="/publish/:id"   element={guard(<PublishStory user={user} />)} />
+        <Route path="/book/:id" element={<ComicReader />} />
+        <Route path="/@:username" element={<CreatorProfile />} />
+        <Route path="/edit/:id" element={guard(<EditStory user={user} />)} />
+        <Route path="/publish/:id" element={guard(<PublishStory user={user} />)} />
 
         {/* ── Super Admin ── */}
-        <Route path="/superadmin"    element={superGuard(<SuperAdminDashboard onLogout={handleLogout} />)} />
+        <Route path="/superadmin" element={superGuard(<SuperAdminDashboard onLogout={handleLogout} />)} />
 
         {/* ── 404 ── */}
         <Route path="*" element={<NotFoundPage />} />

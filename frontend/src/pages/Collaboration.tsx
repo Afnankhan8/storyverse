@@ -60,9 +60,18 @@ const MOCK_ROOMS: Room[] = [
     book: 'The Lost Chronicles',
     lastActivity: new Date(Date.now() - 300000),
     members: [
-      { id: '1', name: 'You', email: 'you@email.com', role: 'admin', online: true, avatar: 'Y', color: 'from-blue-500 to-violet-600' },
-      { id: '2', name: 'Aria Chen', email: 'aria@email.com', role: 'editor', online: true, avatar: 'A', color: 'from-pink-500 to-rose-500' },
-      { id: '3', name: 'Marcus Webb', email: 'marcus@email.com', role: 'viewer', online: false, avatar: 'M', color: 'from-emerald-500 to-cyan-500' },
+      {
+        id: '1',
+        name: 'You',
+        email: 'you@email.com',
+        role: 'admin',
+        online: true,
+        avatar: 'Y',
+        color: 'from-blue-500 to-violet-600',
+        joinedAt: new Date()
+      },
+      { id: '2', name: 'Aria Chen', email: 'aria@email.com', role: 'editor', online: true, avatar: 'A', color: 'from-pink-500 to-rose-500', joinedAt: new Date() },
+      { id: '3', name: 'Marcus Webb', email: 'marcus@email.com', role: 'viewer', online: false, avatar: 'M', color: 'from-emerald-500 to-cyan-500', joinedAt: new Date() },
     ],
     comments: [
       {

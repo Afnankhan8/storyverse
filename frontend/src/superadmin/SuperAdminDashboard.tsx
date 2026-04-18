@@ -217,9 +217,9 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
                   }`}>
                 <tab.icon size={18} className={isActive ? 'text-blue-600' : 'text-slate-400'} />
                 {tab.label}
-                {tab.badge !== undefined && tab.badge > 0 && (
+                {(tab as any).badge !== undefined && (tab as any).badge > 0 && (
                   <span className={`ml-auto text-[10px] font-black px-2 py-0.5 rounded-full ${isActive ? 'bg-blue-200 text-blue-800' : 'bg-red-100 text-red-600'}`}>
-                    {tab.badge}
+                    {(tab as any).badge}
                   </span>
                 )}
               </button>
@@ -399,14 +399,14 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
                               </td>
                               <td className="px-6 py-4">
                                 <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${user.status === 'active' ? 'bg-emerald-100 text-emerald-700' :
-                                    user.status === 'banned' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'
+                                  user.status === 'banned' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'
                                   }`}>
                                   {user.status}
                                 </span>
                               </td>
                               <td className="px-6 py-4">
                                 <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${user.plan === 'pro' ? 'bg-violet-50 text-violet-700 border-violet-200' :
-                                    user.plan === 'team' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-slate-50 text-slate-600 border-slate-200'
+                                  user.plan === 'team' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-slate-50 text-slate-600 border-slate-200'
                                   }`}>
                                   {user.plan}
                                 </span>

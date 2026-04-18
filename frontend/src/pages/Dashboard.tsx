@@ -40,7 +40,7 @@ const fadeIn = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.5, ease: "easeInOut"0.4, 0, 0.2, 1] }
+    transition: { duration: 0.5, }
   }
 };
 
@@ -126,7 +126,7 @@ function ProgressRing({
           strokeDasharray={circumference}
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1, ease: 'easeOut', delay: 0.3 }}
+          transition={{ duration: 1, delay: 0.3 }}
         />
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
