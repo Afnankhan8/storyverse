@@ -3,7 +3,7 @@ load_dotenv()
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import story
+from routers import story, payment, hub, social
 
 app = FastAPI(title="StoryVerse API")
 
@@ -26,6 +26,9 @@ app.add_middleware(
 
 # Routes
 app.include_router(story.router, prefix="/api/story")
+app.include_router(payment.router, prefix="/api/payment")
+app.include_router(hub.router, prefix="/api/hub")
+app.include_router(social.router, prefix="/api/social")
 
 # Root endpoint
 @app.get("/")

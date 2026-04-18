@@ -1,0 +1,132 @@
+# =============================================
+# 🔐 SECURITY – Never commit secrets
+# =============================================
+*.key
+*.pem
+*.p12
+*.json.enc
+*serviceAccountKey*.json
+**/serviceAccountKey.json
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.secret
+*.token
+credentials.json
+firebase-adminsdk*.json
+
+# =============================================
+# 🐍 Python (backend)
+# =============================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+backend/.venv/
+backend/__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# =============================================
+# 📦 Node.js / Frontend
+# =============================================
+node_modules/
+frontend/node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# =============================================
+# ⚡ Build outputs
+# =============================================
+dist/
+dist-ssr/
+build/
+out/
+*.tsbuildinfo
+frontend/dist/
+frontend/build/
+
+# =============================================
+# 🧪 Logs & databases
+# =============================================
+*.log
+*.sql
+*.sqlite
+*.db
+*.db-journal
+logs/
+*.pid
+*.seed
+*.pid.lock
+
+# =============================================
+# 🖥 OS / Editor files
+# =============================================
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.sublime-*
+*.sublime-workspace
+*.sublime-project
+*.code-workspace
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# =============================================
+# 🐙 Git & temporary files
+# =============================================
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej
+*.patch
+*.merge
+*.conflict
+
+# =============================================
+# 🧹 Coverage & reports
+# =============================================
+.coverage
+.coverage.*
+.nyc_output/
+coverage/
+*.lcov
+.nyc_output/
+
+# =============================================
+# 🐳 Docker (if used)
+# =============================================
+docker-compose.override.yml
+.dockerignore
+*.dockerfile
+docker/

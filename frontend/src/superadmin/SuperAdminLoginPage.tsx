@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Lock, User, Eye, EyeOff, Shield } from 'lucide-react';
 
 const SUPER_USERNAME = 'superadmin';
-const SUPER_PASSWORD = 'bookify@2025';
+const SUPER_PASSWORD = 'comixnova@2025';
 
 interface SuperAdminLoginProps {
   onLogin: () => void;
@@ -37,7 +37,7 @@ export default function SuperAdminLoginPage({ onLogin }: SuperAdminLoginProps) {
             <Shield className="w-8 h-8 text-purple-300" />
           </div>
           <h1 className="text-3xl font-bold text-white">Super Admin Portal</h1>
-          <p className="text-purple-200 mt-2">Bookify AI – Full System Control</p>
+          <p className="text-purple-200 mt-2">ComixNova AI – Full System Control</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">

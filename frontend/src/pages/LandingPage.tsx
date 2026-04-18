@@ -1,2119 +1,720 @@
-import { motion, useScroll, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Sparkles, Zap, BookOpen, Image, ArrowRight, Star, Users, Clock,
-  Wand2, Palette, Shield, Play, CheckCircle, Diamond, Heart, Rocket,
-  MessageCircle, Layers, Globe, Award, Menu, X, Crown, LogIn,
-  Zap as Lightning,
+  BookOpen, Star, CheckCircle2,
+  Zap, BarChart3, Globe, Users, Edit3, Smartphone,
+  Menu, X, Sparkles, Share2, Layers, PenTool,
+  ArrowRight, BookMarked, PlayCircle
 } from 'lucide-react';
-import { useRef, useState, useEffect, type MouseEvent } from 'react';
 
-/* ═══════════════════════════════════════════════════════════════
-   PREMIUM DESIGN SYSTEM
-   ═══════════════════════════════════════════════════════════════ */
-const theme = {
-  colors: {
-    // Backgrounds
-    bg: {
-      primary: '#0A0E27',
-      secondary: '#111632',
-      tertiary: '#1A1F3A',
-    },
-    // Premium Gradients
-    gradient: {
-      primary: 'linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%)',
-      secondary: 'linear-gradient(135deg, #3b82f6 0%, #0ea5e9 100%)',
-      blue: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-      sky: 'linear-gradient(135deg, #60a5fa 0%, #38bdf8 100%)',
-      orange: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
-      green: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)',
-    },
-    // Accent Colors
-    primary: '#667eea',
-    secondary: '#0ea5e9',
-    accent: '#3b82f6',
-    success: '#10b981',
-    warning: '#f59e0b',
-    danger: '#ef4444',
-    info: '#3b82f6',
-    // Text Colors
-    text: {
-      primary: '#ffffff',
-      secondary: 'rgba(255, 255, 255, 0.85)',
-      muted: 'rgba(255, 255, 255, 0.6)',
-      disabled: 'rgba(255, 255, 255, 0.4)',
-    },
-    // Surface Colors
-    surface: {
-      base: 'rgba(255, 255, 255, 0.05)',
-      hover: 'rgba(255, 255, 255, 0.1)',
-      active: 'rgba(255, 255, 255, 0.15)',
-    },
-    // Border Colors
-    border: {
-      base: 'rgba(255, 255, 255, 0.1)',
-      hover: 'rgba(255, 255, 255, 0.2)',
-      focus: 'rgba(102, 126, 234, 0.5)',
-    },
-  },
-  spacing: {
-    xs: '0.25rem',    // 4px
-    sm: '0.5rem',     // 8px
-    md: '1rem',       // 16px
-    lg: '1.5rem',     // 24px
-    xl: '2rem',       // 32px
-    '2xl': '3rem',    // 48px
-    '3xl': '4rem',    // 64px
-    '4xl': '6rem',    // 96px
-  },
-  borderRadius: {
-    sm: '0.5rem',     // 8px
-    md: '0.75rem',    // 12px
-    lg: '1rem',       // 16px
-    xl: '1.5rem',     // 24px
-    '2xl': '2rem',    // 32px
-    full: '9999px',
-  },
-  shadows: {
-    sm: '0 2px 8px rgba(0, 0, 0, 0.1)',
-    md: '0 4px 16px rgba(0, 0, 0, 0.15)',
-    lg: '0 8px 32px rgba(0, 0, 0, 0.2)',
-    xl: '0 16px 48px rgba(0, 0, 0, 0.25)',
-    glow: '0 0 40px rgba(102, 126, 234, 0.3)',
-  },
-  transitions: {
-    fast: '150ms ease-in-out',
-    normal: '250ms ease-in-out',
-    slow: '350ms ease-in-out',
-  },
+// ==========================================
+// ANIMATION VARIANTS
+// ==========================================
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
 };
 
-/* ═══════════════════════════════════════════════════════════════
-   UTILITY FUNCTIONS
-   ═══════════════════════════════════════════════════════════════ */
-const scrollToSection = (id: string) => {
-  const element = document.getElementById(id);
-  if (element) {
-    const offset = 80;
-    const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.pageYOffset - offset;
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: 'smooth'
-    });
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1 }
   }
 };
 
-/* ═══════════════════════════════════════════════════════════════
-   TYPEWRITER COMPONENT
-   ═══════════════════════════════════════════════════════════════ */
-type TypewriterProps = {
-  words: string[];
-  className?: string;
-};
+// ==========================================
+// COMPONENTS
+// ==========================================
 
-const Typewriter = ({ words, className = '' }: TypewriterProps) => {
-  const [index, setIndex] = useState(0);
-  const [text, setText] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    const word = words[index];
-    const timeout = setTimeout(() => {
-      if (!isDeleting) {
-        if (text.length < word.length) {
-          setText(word.slice(0, text.length + 1));
-        } else {
-          setTimeout(() => setIsDeleting(true), 2000);
-        }
-      } else {
-        if (text.length > 0) {
-          setText(text.slice(0, -1));
-        } else {
-          setIsDeleting(false);
-          setIndex((prev) => (prev + 1) % words.length);
-        }
-      }
-    }, isDeleting ? 50 : 100);
-
-    return () => clearTimeout(timeout);
-  }, [text, isDeleting, index, words]);
-
-  return (
-    <span className={className}>
-      {text}
-      <motion.span
-        animate={{ opacity: [1, 0] }}
-        transition={{ duration: 0.7, repeat: Infinity }}
-        style={{
-          display: 'inline-block',
-          width: '3px',
-          height: '1em',
-          background: theme.colors.primary,
-          marginLeft: '4px',
-          verticalAlign: 'middle',
-        }}
-      />
-    </span>
-  );
-};
-
-/* ═══════════════════════════════════════════════════════════════
-   ANIMATED COUNTER COMPONENT
-   ═══════════════════════════════════════════════════════════════ */
-type CounterProps = {
-  target: number;
-  suffix?: string;
-  duration?: number;
-};
-
-const Counter = ({ target, suffix = '', duration = 2000 }: CounterProps) => {
-  const [count, setCount] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false);
-  const ref = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasStarted) {
-          setHasStarted(true);
-        }
-      },
-      { threshold: 0.5 }
-    );
-
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [hasStarted]);
-
-  useEffect(() => {
-    if (!hasStarted) return;
-
-    const increment = target / (duration / 16);
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= target) {
-        setCount(target);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(current));
-      }
-    }, 16);
-
-    return () => clearInterval(timer);
-  }, [hasStarted, target, duration]);
-
-  return (
-    <span ref={ref}>
-      {count.toLocaleString()}
-      {suffix}
-    </span>
-  );
-};
-
-/* ═══════════════════════════════════════════════════════════════
-   BACKGROUND EFFECTS
-   ═══════════════════════════════════════════════════════════════ */
-const BackgroundEffects = () => (
-  <>
-    {/* Gradient Orbs */}
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 0,
-      pointerEvents: 'none',
-      overflow: 'hidden',
-    }}>
-      {/* Orb 1 - Blue */}
-      <motion.div
-        animate={{
-          x: [0, 100, 0],
-          y: [0, -50, 0],
-          scale: [1, 1.2, 1],
-        }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-        style={{
-          position: 'absolute',
-          top: '-10%',
-          left: '-5%',
-          width: '800px',
-          height: '800px',
-          background: 'radial-gradient(circle, rgba(102, 126, 234, 0.15) 0%, transparent 70%)',
-          filter: 'blur(60px)',
-        }}
-      />
-      
-      {/* Orb 2 - Sky */}
-      <motion.div
-        animate={{
-          x: [0, -100, 0],
-          y: [0, 100, 0],
-          scale: [1, 1.3, 1],
-        }}
-        transition={{
-          duration: 25,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-        style={{
-          position: 'absolute',
-          top: '20%',
-          right: '-10%',
-          width: '700px',
-          height: '700px',
-          background: 'radial-gradient(circle, rgba(14, 165, 233, 0.12) 0%, transparent 70%)',
-          filter: 'blur(60px)',
-        }}
-      />
-      
-      {/* Orb 3 - Blue */}
-      <motion.div
-        animate={{
-          x: [0, 50, 0],
-          y: [0, -100, 0],
-          scale: [1, 1.1, 1],
-        }}
-        transition={{
-          duration: 30,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-        style={{
-          position: 'absolute',
-          bottom: '-5%',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '600px',
-          height: '600px',
-          background: 'radial-gradient(circle, rgba(79, 172, 254, 0.1) 0%, transparent 70%)',
-          filter: 'blur(60px)',
-        }}
-      />
-    </div>
-
-    {/* Grid Pattern */}
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 0,
-      pointerEvents: 'none',
-      backgroundImage: `
-        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px)
-      `,
-      backgroundSize: '80px 80px',
-    }} />
-
-    {/* Noise Texture */}
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      zIndex: 1,
-      pointerEvents: 'none',
-      opacity: 0.03,
-      backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-      backgroundRepeat: 'repeat',
-    }} />
-  </>
-);
-
-/* ═══════════════════════════════════════════════════════════════
-   PREMIUM NAVBAR COMPONENT
-   ═══════════════════════════════════════════════════════════════ */
-type NavbarProps = {
-  onGetStarted: () => void;
-  scrolled: boolean;
-};
-
-const Navbar = ({ onGetStarted, scrolled }: NavbarProps) => {
+export default function LandingPage({ onGetStarted }: { onGetStarted: () => void }) {
+  const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const navLinks = [
-    { label: 'Features', href: 'features' },
-    { label: 'How It Works', href: 'how-it-works' },
-    { label: 'Testimonials', href: 'testimonials' },
-    { label: 'Pricing', href: 'pricing' },
-  ];
+  
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <>
-      <motion.nav
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 1000,
-          background: scrolled 
-            ? 'rgba(10, 14, 39, 0.92)' 
-            : 'rgba(10, 14, 39, 0.18)',
-          backdropFilter: 'blur(24px) saturate(180%)',
-          border: scrolled 
-            ? `1px solid rgba(255, 255, 255, 0.08)` 
-            : '1px solid transparent',
-          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-          boxShadow: scrolled ? theme.shadows.xl : '0 0 0 rgba(0,0,0,0)',
-        }}
+    <div className="landing-page min-h-screen bg-white text-slate-900 selection:bg-blue-100 selection:text-blue-900 overflow-x-hidden">
+      
+      {/* 1. HEADER / NAVBAR */}
+      <header 
+        className={`fixed top-0 w-full z-50 transition-all duration-300 border-b ${
+          scrolled 
+            ? 'bg-white/80 backdrop-blur-lg border-gray-200 shadow-sm py-3' 
+            : 'bg-white border-transparent py-5'
+        }`}
       >
-        <div style={{
-          maxWidth: '1400px',
-          margin: '0 auto',
-          padding: '0.5rem clamp(1rem, 5vw, 2rem)',
-          height: '80px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '1rem',
-        }}>
-          
+        <div className="w-full px-6 lg:px-10 flex justify-between items-center">
           {/* Logo */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              cursor: 'pointer',
-              zIndex: 10,
-            }}
-          >
-            <div style={{
-              width: '48px',
-              height: '48px',
-              borderRadius: theme.borderRadius.lg,
-              background: theme.colors.gradient.primary,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              boxShadow: theme.shadows.glow,
-            }}>
-              <Sparkles size={24} color="#fff" strokeWidth={2.5} />
+          <div className="flex items-center gap-2 cursor-pointer">
+            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-600/20">
+              <BookOpen size={20} strokeWidth={2.5} />
             </div>
-            <span style={{
-              fontSize: 'clamp(1.25rem, 2vw, 1.5rem)',
-              fontWeight: 900,
-              background: theme.colors.gradient.primary,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-              letterSpacing: '-0.02em',
-            }}>
+            <span className="text-xl font-bold tracking-tight text-gray-900">
               ComixNova
             </span>
-          </motion.div>
-
-          {/* Desktop Navigation - Center */}
-          <div style={{
-            position: 'absolute',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'none',
-          }}
-          className="desktop-nav">
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '2rem',
-              padding: '0.75rem 1.75rem',
-              background: 'rgba(255, 255, 255, 0.06)',
-              borderRadius: theme.borderRadius['2xl'],
-              border: `1px solid rgba(255, 255, 255, 0.08)`,
-              boxShadow: '0 18px 45px rgba(0, 0, 0, 0.08)',
-            }}>
-              {navLinks.map((link) => (
-                <motion.a
-                  key={link.href}
-                  href={`#${link.href}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToSection(link.href);
-                  }}
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  style={{
-                    position: 'relative',
-                    fontSize: '0.95rem',
-                    fontWeight: 600,
-                    color: theme.colors.text.secondary,
-                    textDecoration: 'none',
-                    padding: '0.75rem 0',
-                    letterSpacing: '0.01em',
-                    transition: `${theme.transitions.normal}, color ${theme.transitions.normal}`,
-                    cursor: 'pointer',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = theme.colors.text.primary;
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = theme.colors.text.secondary;
-                  }}
-                >
-                  {link.label}
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileHover={{ width: '100%' }}
-                    style={{
-                      position: 'absolute',
-                      bottom: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '2px',
-                      background: theme.colors.gradient.primary,
-                      borderRadius: '2px',
-                      opacity: 0.8,
-                    }}
-                  />
-                </motion.a>
-              ))}
-            </div>
           </div>
 
-          {/* Right Side Buttons */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem',
-          }}>
-            {/* Upgrade Button - Desktop */}
-            <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              className="upgrade-btn"
-              style={{
-                display: 'none',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.625rem 1.25rem',
-                borderRadius: theme.borderRadius.full,
-                background: theme.colors.gradient.orange,
-                color: '#fff',
-                fontSize: '0.875rem',
-                fontWeight: 700,
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 4px 16px rgba(250, 112, 154, 0.3)',
-                transition: theme.transitions.normal,
-              }}
-            >
-              <Crown size={16} strokeWidth={2.5} />
-              Go Premium
-            </motion.button>
+          {/* Desktop Nav */}
+          <nav className="hidden md:flex items-center gap-10">
+            {['Explore', 'Authors', 'Pricing', 'Enterprise'].map(link => (
+              <a key={link} href={`#${link.toLowerCase()}`} className="text-sm font-medium text-slate-600 hover:text-gray-900 transition-colors">
+                {link}
+              </a>
+            ))}
+          </nav>
 
-            {/* Sign In Button - Desktop */}
-            <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onGetStarted}
-              className="signin-btn"
-              style={{
-                display: 'none',
-                alignItems: 'center',
-                gap: '0.5rem',
-                padding: '0.625rem 1.5rem',
-                borderRadius: theme.borderRadius.full,
-                background: theme.colors.surface.base,
-                color: theme.colors.text.primary,
-                fontSize: '0.9375rem',
-                fontWeight: 600,
-                border: `1px solid ${theme.colors.border.base}`,
-                cursor: 'pointer',
-                transition: theme.transitions.normal,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = theme.colors.surface.hover;
-                e.currentTarget.style.borderColor = theme.colors.border.hover;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = theme.colors.surface.base;
-                e.currentTarget.style.borderColor = theme.colors.border.base;
-              }}
-            >
-              <LogIn size={16} strokeWidth={2.5} />
+          {/* Desktop CTA */}
+          <div className="hidden md:flex items-center gap-4">
+            <button onClick={onGetStarted} className="text-sm font-medium text-slate-600 hover:text-gray-900 transition-colors">
               Sign In
-            </motion.button>
-
-            {/* Mobile Menu Button */}
-            <motion.button
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setMobileMenuOpen(true)}
-              className="mobile-menu-btn"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '44px',
-                height: '44px',
-                borderRadius: theme.borderRadius.md,
-                background: theme.colors.surface.base,
-                border: `1px solid ${theme.colors.border.base}`,
-                color: theme.colors.text.primary,
-                cursor: 'pointer',
-                transition: theme.transitions.fast,
-              }}
-            >
-              <Menu size={24} strokeWidth={2} />
-            </motion.button>
+            </button>
+            <button onClick={onGetStarted} className="bg-gray-900 text-white px-5 py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-all shadow-md hover:shadow-lg hover:-translate-y-0.5">
+              Start Publishing
+            </button>
           </div>
-        </div>
-      </motion.nav>
 
-      {/* Mobile Menu */}
+          {/* Mobile Menu Toggle */}
+          <button className="md:hidden p-2 text-slate-600" onClick={() => setMobileMenuOpen(true)}>
+            <Menu size={24} />
+          </button>
+        </div>
+      </header>
+
+      {/* Mobile Menu Overlay */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              zIndex: 2000,
-              background: 'rgba(10, 14, 39, 0.98)',
-              backdropFilter: 'blur(20px)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '2rem',
-            }}
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-50 bg-white p-6 md:hidden"
           >
-            {/* Close Button */}
-            <motion.button
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setMobileMenuOpen(false)}
-              style={{
-                position: 'absolute',
-                top: '1.5rem',
-                right: '1.5rem',
-                width: '44px',
-                height: '44px',
-                borderRadius: theme.borderRadius.md,
-                background: theme.colors.surface.base,
-                border: `1px solid ${theme.colors.border.base}`,
-                color: theme.colors.text.primary,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer',
-              }}
-            >
-              <X size={24} strokeWidth={2} />
-            </motion.button>
-
-            {/* Mobile Nav Links */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '2rem',
-              marginBottom: '3rem',
-            }}>
-              {navLinks.map((link, index) => (
-                <motion.a
-                  key={link.href}
-                  href={`#${link.href}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setMobileMenuOpen(false);
-                    scrollToSection(link.href);
-                  }}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  style={{
-                    fontSize: '2rem',
-                    fontWeight: 700,
-                    color: theme.colors.text.primary,
-                    textDecoration: 'none',
-                    textAlign: 'center',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {link.label}
-                </motion.a>
-              ))}
+            <div className="flex justify-between items-center mb-8">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white">
+                  <BookOpen size={16} />
+                </div>
+                <span className="text-lg font-bold">ComixNova</span>
+              </div>
+              <button onClick={() => setMobileMenuOpen(false)} className="text-slate-600 p-2"><X size={24} /></button>
             </div>
-
-            {/* Mobile Buttons */}
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1rem',
-              width: '100%',
-              maxWidth: '300px',
-            }}>
-              <motion.button
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-                style={{
-                  padding: '1rem',
-                  borderRadius: theme.borderRadius.lg,
-                  background: theme.colors.gradient.orange,
-                  color: '#fff',
-                  fontSize: '1rem',
-                  fontWeight: 700,
-                  border: 'none',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem',
-                }}
-              >
-                <Crown size={20} strokeWidth={2.5} />
-                Go Premium
-              </motion.button>
-
-              <motion.button
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onGetStarted();
-                }}
-                style={{
-                  padding: '1rem',
-                  borderRadius: theme.borderRadius.lg,
-                  background: theme.colors.surface.base,
-                  color: theme.colors.text.primary,
-                  fontSize: '1rem',
-                  fontWeight: 600,
-                  border: `1px solid ${theme.colors.border.base}`,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '0.5rem',
-                }}
-              >
-                <LogIn size={20} strokeWidth={2.5} />
-                Sign In
-              </motion.button>
+            <div className="flex flex-col gap-6">
+              {['Explore', 'Authors', 'Pricing', 'Blog'].map(link => (
+                <a key={link} href={`#${link.toLowerCase()}`} onClick={() => setMobileMenuOpen(false)} className="text-2xl font-semibold text-gray-900">
+                  {link}
+                </a>
+              ))}
+              <div className="h-px bg-gray-100 my-4" />
+              <button onClick={() => { setMobileMenuOpen(false); onGetStarted(); }} className="text-xl font-semibold text-left">Sign In</button>
+              <button onClick={() => { setMobileMenuOpen(false); onGetStarted(); }} className="bg-blue-600 text-white px-6 py-4 rounded-xl text-lg font-medium text-center shadow-lg shadow-blue-600/20">
+                Start Publishing Free
+              </button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Responsive Styles */}
-      <style>{`
-        @media (min-width: 1024px) {
-          .desktop-nav {
-            display: block !important;
-          }
-          .mobile-menu-btn {
-            display: none !important;
-          }
-          .upgrade-btn,
-          .signin-btn {
-            display: flex !important;
-          }
-        }
-      `}</style>
-    </>
-  );
-};
-
-/* ═══════════════════════════════════════════════════════════════
-   MAIN LANDING PAGE
-   ═══════════════════════════════════════════════════════════════ */
-export default function LandingPage({ onGetStarted = () => {} }) {
-  const containerRef = useRef(null);
-  const [scrolled, setScrolled] = useState(false);
-  const { scrollYProgress } = useScroll({ target: containerRef });
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const features = [
-    {
-      icon: Wand2,
-      title: 'AI-Powered Storytelling',
-      description: 'Advanced AI creates compelling narratives with rich dialogue, character development, and plot twists.',
-      gradient: theme.colors.gradient.primary,
-    },
-    {
-      icon: Palette,
-      title: 'Professional Artwork',
-      description: 'Studio-quality illustrations with consistent style, vibrant colors, and cinematic composition.',
-      gradient: theme.colors.gradient.blue,
-    },
-    {
-      icon: BookOpen,
-      title: 'Interactive Reader',
-      description: 'Immersive flipbook experience with smooth transitions and mobile-optimized viewing.',
-      gradient: theme.colors.gradient.sky,
-    },
-    {
-      icon: Lightning,
-      title: 'Lightning Speed',
-      description: 'Generate complete comics in under 30 seconds. From script to finished panels instantly.',
-      gradient: theme.colors.gradient.orange,
-    },
-    {
-      icon: Shield,
-      title: 'Secure Library',
-      description: 'All creations safely stored in the cloud with automatic backups and instant access.',
-      gradient: theme.colors.gradient.green,
-    },
-    {
-      icon: Sparkles,
-      title: 'Premium Quality',
-      description: 'High-resolution exports perfect for printing, sharing, or publishing professionally.',
-      gradient: theme.colors.gradient.secondary,
-    },
-  ];
-
-  const stats = [
-    { icon: Sparkles, value: 100000, suffix: '+', label: 'Comics Created' },
-    { icon: Users, value: 50000, suffix: '+', label: 'Active Creators' },
-    { icon: Clock, value: 30, suffix: 's', label: 'Average Speed' },
-    { icon: Image, value: 4, suffix: 'K', label: 'HD Resolution' },
-  ];
-
-  const steps = [
-    {
-      number: '01',
-      icon: Wand2,
-      title: 'Describe Your Story',
-      description: 'Enter characters, setting, plot, and genre. Be as detailed or brief as you like.',
-      gradient: theme.colors.gradient.primary,
-    },
-    {
-      number: '02',
-      icon: Sparkles,
-      title: 'AI Creates Magic',
-      description: 'Our AI generates the complete script, dialogue, and illustrated panels instantly.',
-      gradient: theme.colors.gradient.blue,
-    },
-    {
-      number: '03',
-      icon: BookOpen,
-      title: 'Read & Share',
-      description: 'Enjoy your comic in our beautiful reader. Download, share, or publish easily.',
-      gradient: theme.colors.gradient.sky,
-    },
-  ];
-
-  const testimonials = [
-    {
-      name: 'Sarah Mitchell',
-      role: "Children's Book Author",
-      text: "I've created over 50 comics for my readers. The quality is phenomenal. This tool has transformed my creative process completely.",
-      avatar: 'SM',
-      rating: 5,
-    },
-    {
-      name: 'David Chen',
-      role: 'Graphic Designer',
-      text: 'As a professional designer, I was skeptical. But the output quality genuinely impressed me. The consistency is remarkable.',
-      avatar: 'DC',
-      rating: 5,
-    },
-    {
-      name: 'Emma Rodriguez',
-      role: 'Elementary Teacher',
-      text: 'My students are completely engaged! Every child creates their own stories now. It\'s the highlight of our sessions.',
-      avatar: 'ER',
-      rating: 5,
-    },
-  ];
-
-  const pricingPlans = [
-    {
-      name: 'Starter',
-      price: '$0',
-      period: 'forever',
-      description: 'Perfect for trying out ComixNova',
-      features: [
-        '3 comics per month',
-        '8 panels per comic',
-        'Standard resolution',
-        'Community support',
-        'Basic templates',
-      ],
-      popular: false,
-      gradient: theme.colors.gradient.blue,
-    },
-    {
-      name: 'Professional',
-      price: '$12',
-      period: 'per month',
-      description: 'Best for serious creators',
-      features: [
-        'Unlimited comics',
-        'Up to 16 panels',
-        'HD exports & downloads',
-        'Priority support',
-        'Advanced templates',
-        'Commercial license',
-      ],
-      popular: true,
-      gradient: theme.colors.gradient.primary,
-    },
-    {
-      name: 'Studio',
-      price: '$39',
-      period: 'per month',
-      description: 'For professional teams',
-      features: [
-        'Everything in Pro',
-        'Up to 24 panels',
-        'Team collaboration',
-        'API access',
-        'White-label options',
-        'Dedicated support',
-      ],
-      popular: false,
-      gradient: theme.colors.gradient.sky,
-    },
-  ];
-
-  return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        
-        * {
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-        }
-
-        html {
-          scroll-behavior: smooth;
-        }
-
-        body {
-          font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-          background: ${theme.colors.bg.primary};
-          color: ${theme.colors.text.primary};
-          overflow-x: hidden;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* Scroll Progress Bar */
-        .scroll-progress {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          height: 4px;
-          z-index: 9999;
-          transform-origin: left;
-        }
-
-        /* Section Styles */
-        .section {
-          position: relative;
-          z-index: 10;
-          padding: clamp(3rem, 8vw, 6rem) clamp(1rem, 5vw, 3rem);
-        }
-
-        .container {
-          max-width: 1400px;
-          margin: 0 auto;
-          width: 100%;
-        }
-
-        /* Card Hover Effect */
-        .feature-card,
-        .step-card,
-        .testimonial-card,
-        .pricing-card {
-          transition: transform ${theme.transitions.normal},
-                      box-shadow ${theme.transitions.normal};
-        }
-
-        .feature-card:hover,
-        .step-card:hover,
-        .testimonial-card:hover {
-          transform: translateY(-8px);
-        }
-
-        .pricing-card:hover {
-          transform: translateY(-12px) scale(1.02);
-        }
-
-        /* Button Styles */
-        .btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          padding: 0;
-          border: none;
-          border-radius: ${theme.borderRadius.lg};
-          font-weight: 700;
-          font-size: 1rem;
-          cursor: pointer;
-          transition: all ${theme.transitions.normal};
-          text-decoration: none;
-        }
-
-        .btn-primary {
-          background: ${theme.colors.gradient.primary};
-          color: #fff;
-          padding: 1.125rem 2.5rem;
-          box-shadow: ${theme.shadows.md};
-        }
-
-        .btn-primary:hover {
-          box-shadow: ${theme.shadows.lg};
-          transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-          background: ${theme.colors.surface.base};
-          color: ${theme.colors.text.primary};
-          padding: 1.125rem 2.5rem;
-          border: 1px solid ${theme.colors.border.base};
-        }
-
-        .btn-secondary:hover {
-          background: ${theme.colors.surface.hover};
-          border-color: ${theme.colors.border.hover};
-        }
-
-        /* Responsive Grid */
-        .grid {
-          display: grid;
-          gap: clamp(1rem, 3vw, 2rem);
-        }
-
-        .grid-2 {
-          grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
-        }
-
-        .grid-3 {
-          grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
-        }
-
-        .grid-4 {
-          grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
-        }
-
-        /* Badge */
-        .badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 0.5rem 1.25rem;
-          border-radius: ${theme.borderRadius.full};
-          background: ${theme.colors.surface.base};
-          border: 1px solid ${theme.colors.border.base};
-          font-size: 0.875rem;
-          font-weight: 700;
-          letter-spacing: 0.05em;
-          text-transform: uppercase;
-          backdrop-filter: blur(10px);
-        }
-
-        /* Responsive Typography */
-        .heading-xl {
-          font-size: clamp(2.5rem, 6vw, 4.5rem);
-          font-weight: 900;
-          line-height: 1.1;
-          letter-spacing: -0.02em;
-        }
-
-        .heading-lg {
-          font-size: clamp(2rem, 5vw, 3.5rem);
-          font-weight: 800;
-          line-height: 1.2;
-          letter-spacing: -0.01em;
-        }
-
-        .heading-md {
-          font-size: clamp(1.5rem, 4vw, 2rem);
-          font-weight: 700;
-          line-height: 1.3;
-        }
-
-        .text-gradient {
-          background: ${theme.colors.gradient.primary};
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-
-        /* Animations */
-        @keyframes float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-20px); }
-        }
-
-        .float {
-          animation: float 6s ease-in-out infinite;
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 768px) {
-          .section {
-            padding: clamp(2rem, 6vw, 4rem) 1.5rem;
-          }
-
-          .btn-primary,
-          .btn-secondary {
-            width: 100%;
-            padding: 1rem 2rem;
-          }
-        }
-
-        /* Print Styles */
-        @media print {
-          .scroll-progress,
-          nav,
-          .mobile-menu-btn,
-          .upgrade-btn,
-          .signin-btn {
-            display: none !important;
-          }
-        }
-      `}</style>
-
-      <div ref={containerRef} style={{ minHeight: '100vh', position: 'relative' }}>
-        
-        {/* Scroll Progress */}
-        <motion.div
-          className="scroll-progress"
-          style={{
-            scaleX: scrollYProgress,
-            background: theme.colors.gradient.primary,
-          }}
-        />
-
-        {/* Background Effects */}
-        <BackgroundEffects />
-
-        {/* Navbar */}
-        <Navbar onGetStarted={onGetStarted} scrolled={scrolled} />
-
-        {/* Hero Section */}
-        <section className="section" style={{
-          paddingTop: 'clamp(8rem, 15vw, 12rem)',
-          paddingBottom: 'clamp(4rem, 10vw, 8rem)',
-        }}>
-          <div className="container" style={{ textAlign: 'center' }}>
+      {/* 2. HERO SECTION */}
+      <section className="relative pt-32 pb-20 lg:pt-52 lg:pb-40 overflow-hidden">
+        <div className="w-full px-8 lg:px-12 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-12 items-center">
             
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              style={{ marginBottom: '2rem' }}
+            {/* Hero Content */}
+            <motion.div 
+              initial="hidden" animate="visible" variants={staggerContainer}
+              className="w-full"
             >
-              <span className="badge" style={{ color: theme.colors.text.muted }}>
-                <Sparkles size={16} />
-                AI-Powered Comic Creation Platform
-              </span>
-            </motion.div>
+              <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-50 border border-gray-200 text-sm font-medium text-slate-600 mb-6">
+                <Sparkles size={14} className="text-amber-500" />
+                <span>ComixNova 2.0 is now live</span>
+              </motion.div>
+              
+              <motion.h1 variants={fadeInUp} className="text-6xl lg:text-8xl font-extrabold tracking-tight text-gray-900 leading-[1.1] mb-6">
+                Where Great Books Are <br className="hidden lg:block" />
+                <span className="text-blue-600">Built & Discovered.</span>
+              </motion.h1>
+              
+              <motion.p variants={fadeInUp} className="text-lg lg:text-xl text-slate-500 mb-8 leading-relaxed">
+                The all-in-one publishing ecosystem. Write seamlessly, publish globally, and build your audience—all from one beautiful workspace.
+              </motion.p>
+              
+              <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4">
+                <button onClick={onGetStarted} className="bg-blue-600 text-white px-8 py-4 rounded-full text-base font-semibold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/25 flex items-center justify-center gap-2 group">
+                  Start Publishing
+                  <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+                </button>
+                <button className="bg-white text-gray-900 border border-gray-200 px-8 py-4 rounded-full text-base font-medium hover:bg-slate-50 transition-all flex items-center justify-center gap-2">
+                  <PlayCircle size={18} className="text-slate-400" />
+                  See how it works
+                </button>
+              </motion.div>
 
-            {/* Heading */}
-            <motion.h1
-              className="heading-xl"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              style={{ marginBottom: '1.5rem' }}
-            >
-              Transform Your Ideas Into<br />
-              <span className="text-gradient">
-                <Typewriter words={[
-                  'Stunning Comics',
-                  'Epic Adventures',
-                  'Hero Stories',
-                  'Space Sagas',
-                ]} />
-              </span>
-            </motion.h1>
-
-            {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              style={{
-                fontSize: 'clamp(1.125rem, 2vw, 1.25rem)',
-                color: theme.colors.text.muted,
-                maxWidth: '700px',
-                margin: '0 auto 3rem',
-                lineHeight: 1.7,
-              }}
-            >
-              Describe your story and watch as our advanced AI writes the script, generates stunning artwork, and delivers your complete comic in seconds.
-            </motion.p>
-
-            {/* Trust Badges */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                gap: '1rem',
-                marginBottom: '3rem',
-              }}
-            >
-              {[
-                { icon: Users, text: '100,000+ Creators' },
-                { icon: Star, text: '4.9/5 Rating' },
-                { icon: Zap, text: '30-Second Generation' },
-              ].map(({ icon: Icon, text }) => (
-                <div
-                  key={text}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem',
-                    padding: '0.75rem 1.25rem',
-                    borderRadius: theme.borderRadius.full,
-                    background: theme.colors.surface.base,
-                    border: `1px solid ${theme.colors.border.base}`,
-                    fontSize: '0.9375rem',
-                    fontWeight: 600,
-                    color: theme.colors.text.secondary,
-                  }}
-                >
-                  <Icon size={18} color={theme.colors.primary} />
-                  {text}
+              <motion.div variants={fadeInUp} className="mt-10 flex items-center gap-4 text-sm text-slate-500">
+                <div className="flex -space-x-2">
+                  {[1,2,3,4].map(i => (
+                    <img key={i} src={`https://i.pravatar.cc/100?img=${i+10}`} className="w-8 h-8 rounded-full border-2 border-white object-cover" alt="User" />
+                  ))}
                 </div>
-              ))}
+                <div className="flex items-center gap-1">
+                  <Star size={14} className="fill-amber-500 text-amber-500" />
+                  <Star size={14} className="fill-amber-500 text-amber-500" />
+                  <Star size={14} className="fill-amber-500 text-amber-500" />
+                  <Star size={14} className="fill-amber-500 text-amber-500" />
+                  <Star size={14} className="fill-amber-500 text-amber-500" />
+                  <span className="font-medium text-gray-900 ml-1">4.9/5</span> from 10k+ authors
+                </div>
+              </motion.div>
             </motion.div>
 
-            {/* CTA Buttons */}
+            {/* Hero Visuals — Stacked Book Covers (Kindle/Goodreads style) */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                justifyContent: 'center',
-                gap: '1rem',
-                marginBottom: '1rem',
-              }}
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.9, delay: 0.2 }}
+              className="relative flex items-center justify-center lg:h-[620px]"
             >
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={onGetStarted}
-                className="btn btn-primary"
-              >
-                Start Creating Free
-                <ArrowRight size={20} />
-              </motion.button>
+              {/* Background glow */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-slate-50 to-amber-50 rounded-[3rem]" />
 
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                className="btn btn-secondary"
-              >
-                <Play size={18} />
-                Watch Demo
-              </motion.button>
-            </motion.div>
-
-            {/* Disclaimer */}
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.7 }}
-              style={{
-                fontSize: '0.875rem',
-                color: theme.colors.text.disabled,
-                marginBottom: '5rem',
-              }}
-            >
-              No credit card required • Free forever plan available
-            </motion.p>
-
-            {/* Preview Cards */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.8 }}
-            >
-              <p style={{
-                fontSize: '0.8125rem',
-                color: theme.colors.text.disabled,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                fontWeight: 700,
-                marginBottom: '2rem',
-              }}>
-                Comics Created by Our Community
-              </p>
-
-              <div className="grid grid-4">
-                {[
-                  { emoji: '🦸‍♂️', label: 'Superhero', gradient: theme.colors.gradient.primary },
-                  { emoji: '⚔️', label: 'Fantasy', gradient: theme.colors.gradient.orange },
-                  { emoji: '🚀', label: 'Sci-Fi', gradient: theme.colors.gradient.blue },
-                  { emoji: '🏆', label: 'Sports', gradient: theme.colors.gradient.green },
-                ].map((item, index) => (
-                  <motion.div
-                    key={item.label}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1 + index * 0.1 }}
-                    whileHover={{ y: -10, scale: 1.05 }}
-                    style={{
-                      borderRadius: theme.borderRadius.xl,
-                      background: theme.colors.surface.base,
-                      border: `1px solid ${theme.colors.border.base}`,
-                      padding: '2rem 1.5rem',
-                      textAlign: 'center',
-                      cursor: 'pointer',
-                      position: 'relative',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    <div style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: '3px',
-                      background: item.gradient,
-                    }} />
-                    <div style={{
-                      fontSize: '3rem',
-                      marginBottom: '0.75rem',
-                      filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.3))',
-                    }}>
-                      {item.emoji}
-                    </div>
-                    <div style={{
-                      fontSize: '0.9375rem',
-                      fontWeight: 700,
-                      color: theme.colors.text.primary,
-                    }}>
-                      {item.label}
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Stats Section */}
-        <section className="section">
-          <div className="container">
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 240px), 1fr))',
-              gap: '2px',
-              background: theme.colors.border.base,
-              borderRadius: theme.borderRadius.xl,
-              overflow: 'hidden',
-              border: `1px solid ${theme.colors.border.base}`,
-            }}>
-              {stats.map((stat, index) => (
+              {/* Book Stack — 3D perspective grid like Apple Books */}
+              <div className="relative z-10 flex items-end justify-center gap-4 px-8 pb-8 pt-12">
+                {/* Back book */}
                 <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0 }}
-                  whileInView={{ opacity: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  style={{
-                    background: theme.colors.surface.base,
-                    padding: '3rem 2rem',
-                    textAlign: 'center',
-                    backdropFilter: 'blur(10px)',
-                  }}
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+                  className="w-[120px] h-[170px] rounded-xl overflow-hidden shadow-2xl shadow-slate-400/30 flex-shrink-0 transform -rotate-6 -mb-4"
                 >
-                  <stat.icon
-                    size={28}
-                    color={theme.colors.primary}
-                    strokeWidth={2}
-                    style={{ margin: '0 auto 1rem' }}
-                  />
-                  <div style={{
-                    fontSize: 'clamp(2.5rem, 5vw, 3rem)',
-                    fontWeight: 900,
-                    color: theme.colors.text.primary,
-                    lineHeight: 1,
-                    marginBottom: '0.5rem',
-                  }}>
-                    <Counter target={stat.value} suffix={stat.suffix} />
-                  </div>
-                  <div style={{
-                    fontSize: '1rem',
-                    color: theme.colors.text.muted,
-                    fontWeight: 600,
-                  }}>
-                    {stat.label}
-                  </div>
+                  <img src="https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=300&q=80" alt="Novel" className="w-full h-full object-cover" />
                 </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section id="features" className="section">
-          <div className="container">
-            <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-              >
-                <span className="badge" style={{ color: theme.colors.text.muted, marginBottom: '1.5rem' }}>
-                  <Layers size={16} />
-                  Powerful Features
-                </span>
-                <h2 className="heading-lg" style={{ marginBottom: '1rem' }}>
-                  Everything You Need to<br />
-                  <span className="text-gradient">Create Amazing Comics</span>
-                </h2>
-                <p style={{
-                  fontSize: 'clamp(1rem, 2vw, 1.125rem)',
-                  color: theme.colors.text.muted,
-                  maxWidth: '600px',
-                  margin: '0 auto',
-                  lineHeight: 1.7,
-                }}>
-                  Professional-grade tools wrapped in an intuitive, easy-to-use interface. No design experience required.
-                </p>
-              </motion.div>
-            </div>
-
-            <div className="grid grid-3">
-              {features.map((feature, index) => (
+                {/* Front center book — largest */}
                 <motion.div
-                  key={feature.title}
-                  className="feature-card"
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.6 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  style={{
-                    background: theme.colors.surface.base,
-                    border: `1px solid ${theme.colors.border.base}`,
-                    borderRadius: theme.borderRadius.xl,
-                    padding: '2.5rem',
-                    position: 'relative',
-                    overflow: 'hidden',
-                  }}
+                  animate={{ y: [0, -12, 0] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                  className="w-[160px] h-[230px] rounded-xl overflow-hidden shadow-2xl shadow-blue-400/20 flex-shrink-0 relative z-10"
                 >
-                  <div style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: '3px',
-                    background: feature.gradient,
-                  }} />
-
-                  <div style={{
-                    width: '64px',
-                    height: '64px',
-                    borderRadius: theme.borderRadius.lg,
-                    background: feature.gradient,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '1.5rem',
-                    boxShadow: theme.shadows.md,
-                  }}>
-                    <feature.icon size={28} color="#fff" strokeWidth={2} />
-                  </div>
-
-                  <h3 style={{
-                    fontSize: '1.375rem',
-                    fontWeight: 700,
-                    color: theme.colors.text.primary,
-                    marginBottom: '0.75rem',
-                    lineHeight: 1.3,
-                  }}>
-                    {feature.title}
-                  </h3>
-
-                  <p style={{
-                    fontSize: '1rem',
-                    color: theme.colors.text.muted,
-                    lineHeight: 1.7,
-                  }}>
-                    {feature.description}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* How It Works Section */}
-        <section id="how-it-works" className="section">
-          <div className="container">
-            <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-              >
-                <span className="badge" style={{ color: theme.colors.text.muted, marginBottom: '1.5rem' }}>
-                  <Rocket size={16} />
-                  Simple Process
-                </span>
-                <h2 className="heading-lg" style={{ marginBottom: '1rem' }}>
-                  Create Your Comic in{' '}
-                  <span className="text-gradient">3 Easy Steps</span>
-                </h2>
-                <p style={{
-                  fontSize: 'clamp(1rem, 2vw, 1.125rem)',
-                  color: theme.colors.text.muted,
-                  maxWidth: '560px',
-                  margin: '0 auto',
-                  lineHeight: 1.7,
-                }}>
-                  No drawing skills needed. No complex software. Just your imagination and our AI.
-                </p>
-              </motion.div>
-            </div>
-
-            <div className="grid grid-3">
-              {steps.map((step, index) => (
-                <motion.div
-                  key={step.number}
-                  className="step-card"
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.2, duration: 0.7 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  style={{
-                    background: theme.colors.surface.base,
-                    border: `1px solid ${theme.colors.border.base}`,
-                    borderRadius: theme.borderRadius.xl,
-                    padding: '2.5rem',
-                    position: 'relative',
-                    overflow: 'hidden',
-                  }}
-                >
-                  <div style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: '3px',
-                    background: step.gradient,
-                  }} />
-
-                  <div style={{
-                    fontSize: 'clamp(4rem, 8vw, 7rem)',
-                    fontWeight: 900,
-                    lineHeight: 1,
-                    background: step.gradient,
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                    opacity: 0.15,
-                    marginBottom: '1.5rem',
-                  }}>
-                    {step.number}
-                  </div>
-
-                  <div style={{
-                    width: '56px',
-                    height: '56px',
-                    borderRadius: theme.borderRadius.md,
-                    background: step.gradient,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '1.5rem',
-                  }}>
-                    <step.icon size={26} color="#fff" strokeWidth={2} />
-                  </div>
-
-                  <h3 style={{
-                    fontSize: '1.375rem',
-                    fontWeight: 700,
-                    color: theme.colors.text.primary,
-                    marginBottom: '0.75rem',
-                  }}>
-                    {step.title}
-                  </h3>
-
-                  <p style={{
-                    fontSize: '1rem',
-                    color: theme.colors.text.muted,
-                    lineHeight: 1.7,
-                  }}>
-                    {step.description}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Testimonials Section */}
-        <section id="testimonials" className="section">
-          <div className="container">
-            <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-              >
-                <span className="badge" style={{ color: theme.colors.text.muted, marginBottom: '1.5rem' }}>
-                  <Heart size={16} />
-                  Customer Reviews
-                </span>
-                <h2 className="heading-lg">
-                  Trusted by{' '}
-                  <span className="text-gradient">Creative Professionals</span>
-                </h2>
-              </motion.div>
-            </div>
-
-            <div className="grid grid-3">
-              {testimonials.map((testimonial, index) => (
-                <motion.div
-                  key={testimonial.name}
-                  className="testimonial-card"
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.15, duration: 0.6 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  style={{
-                    background: theme.colors.surface.base,
-                    border: `1px solid ${theme.colors.border.base}`,
-                    borderRadius: theme.borderRadius.xl,
-                    padding: '2.5rem',
-                  }}
-                >
-                  <div style={{
-                    display: 'flex',
-                    gap: '0.25rem',
-                    marginBottom: '1.5rem',
-                  }}>
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star
-                        key={i}
-                        size={18}
-                        color={theme.colors.warning}
-                        fill={theme.colors.warning}
-                        strokeWidth={0}
-                      />
-                    ))}
-                  </div>
-
-                  <p style={{
-                    fontSize: '1rem',
-                    color: theme.colors.text.secondary,
-                    lineHeight: 1.8,
-                    marginBottom: '2rem',
-                    fontStyle: 'italic',
-                  }}>
-                    "{testimonial.text}"
-                  </p>
-
-                  <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '1rem',
-                  }}>
-                    <div style={{
-                      width: '48px',
-                      height: '48px',
-                      borderRadius: '50%',
-                      background: theme.colors.gradient.primary,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontWeight: 700,
-                      fontSize: '1.125rem',
-                      color: '#fff',
-                    }}>
-                      {testimonial.avatar}
+                  <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=80" alt="Book" className="w-full h-full object-cover" />
+                  {/* Reading badge */}
+                  <div className="absolute bottom-3 left-0 right-0 mx-3 bg-white/90 backdrop-blur-sm rounded-lg px-3 py-2">
+                    <div className="flex items-center gap-2">
+                      <BookOpen size={12} className="text-blue-600" />
+                      <span className="text-xs font-semibold text-gray-900">Now Reading</span>
                     </div>
-
-                    <div>
-                      <div style={{
-                        fontSize: '1rem',
-                        fontWeight: 700,
-                        color: theme.colors.text.primary,
-                        marginBottom: '0.125rem',
-                      }}>
-                        {testimonial.name}
-                      </div>
-                      <div style={{
-                        fontSize: '0.875rem',
-                        color: theme.colors.text.muted,
-                      }}>
-                        {testimonial.role}
-                      </div>
+                    <div className="w-full bg-gray-200 rounded-full h-1 mt-1.5">
+                      <div className="bg-blue-600 h-1 rounded-full w-3/5" />
                     </div>
                   </div>
                 </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Pricing Section */}
-        <section id="pricing" className="section">
-          <div className="container">
-            <div style={{ textAlign: 'center', marginBottom: '5rem' }}>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-              >
-                <span className="badge" style={{ color: theme.colors.text.muted, marginBottom: '1.5rem' }}>
-                  <Diamond size={16} />
-                  Flexible Pricing
-                </span>
-                <h2 className="heading-lg" style={{ marginBottom: '1rem' }}>
-                  Choose Your{' '}
-                  <span className="text-gradient">Perfect Plan</span>
-                </h2>
-                <p style={{
-                  fontSize: 'clamp(1rem, 2vw, 1.125rem)',
-                  color: theme.colors.text.muted,
-                  lineHeight: 1.7,
-                }}>
-                  Start free and upgrade as you grow. Cancel anytime.
-                </p>
-              </motion.div>
-            </div>
-
-            <div className="grid grid-3">
-              {pricingPlans.map((plan, index) => (
+                {/* Right book */}
                 <motion.div
-                  key={plan.name}
-                  className="pricing-card"
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.15, duration: 0.7 }}
-                  viewport={{ once: true }}
-                  style={{
-                    position: 'relative',
-                    background: plan.popular
-                      ? `linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.05))`
-                      : theme.colors.surface.base,
-                    border: plan.popular
-                      ? `2px solid rgba(102, 126, 234, 0.3)`
-                      : `1px solid ${theme.colors.border.base}`,
-                    borderRadius: theme.borderRadius.xl,
-                    padding: '3rem 2.5rem',
-                    overflow: 'hidden',
-                  }}
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                  className="w-[120px] h-[170px] rounded-xl overflow-hidden shadow-2xl shadow-slate-400/30 flex-shrink-0 transform rotate-6 -mb-4"
                 >
-                  {plan.popular && (
-                    <>
-                      <div style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        height: '4px',
-                        background: plan.gradient,
-                      }} />
-                      <div style={{
-                        position: 'absolute',
-                        top: '1.5rem',
-                        right: '1.5rem',
-                        background: plan.gradient,
-                        color: '#fff',
-                        fontSize: '0.6875rem',
-                        fontWeight: 800,
-                        letterSpacing: '0.1em',
-                        padding: '0.375rem 0.875rem',
-                        borderRadius: theme.borderRadius.full,
-                        textTransform: 'uppercase',
-                        boxShadow: theme.shadows.md,
-                      }}>
-                        Most Popular
-                      </div>
-                    </>
-                  )}
-
-                  <div style={{
-                    fontSize: '0.9375rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.1em',
-                    color: theme.colors.text.muted,
-                    textTransform: 'uppercase',
-                    marginBottom: '0.75rem',
-                  }}>
-                    {plan.name}
-                  </div>
-
-                  <div style={{ marginBottom: '1.5rem' }}>
-                    <span style={{
-                      fontSize: 'clamp(3rem, 6vw, 4rem)',
-                      fontWeight: 800,
-                      color: theme.colors.text.primary,
-                      lineHeight: 1,
-                    }}>
-                      {plan.price}
-                    </span>
-                    {plan.price !== '$0' && (
-                      <span style={{
-                        fontSize: '1.125rem',
-                        color: theme.colors.text.muted,
-                        marginLeft: '0.5rem',
-                      }}>
-                        /{plan.period.split(' ')[1]}
-                      </span>
-                    )}
-                  </div>
-
-                  <p style={{
-                    fontSize: '0.9375rem',
-                    color: theme.colors.text.muted,
-                    marginBottom: '2rem',
-                  }}>
-                    {plan.description}
-                  </p>
-
-                  <ul style={{
-                    listStyle: 'none',
-                    padding: 0,
-                    margin: '0 0 2.5rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1rem',
-                  }}>
-                    {plan.features.map((feature) => (
-                      <li
-                        key={feature}
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.75rem',
-                          fontSize: '1rem',
-                          color: theme.colors.text.secondary,
-                        }}
-                      >
-                        <CheckCircle size={18} color={theme.colors.success} strokeWidth={2.5} />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={onGetStarted}
-                    style={{
-                      width: '100%',
-                      padding: '1rem',
-                      borderRadius: theme.borderRadius.lg,
-                      border: plan.popular ? 'none' : `1px solid ${theme.colors.border.base}`,
-                      background: plan.popular ? plan.gradient : 'transparent',
-                      color: plan.popular ? '#fff' : theme.colors.text.primary,
-                      fontWeight: 700,
-                      fontSize: '1rem',
-                      cursor: 'pointer',
-                      transition: theme.transitions.normal,
-                      boxShadow: plan.popular ? theme.shadows.md : 'none',
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!plan.popular) {
-                        e.currentTarget.style.background = theme.colors.surface.hover;
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!plan.popular) {
-                        e.currentTarget.style.background = 'transparent';
-                      }
-                    }}
-                  >
-                    Get Started
-                  </motion.button>
+                  <img src="https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=300&q=80" alt="Comic" className="w-full h-full object-cover" />
                 </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Final CTA Section */}
-        <section className="section">
-          <div className="container">
-            <motion.div
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              style={{
-                maxWidth: '900px',
-                margin: '0 auto',
-                textAlign: 'center',
-                background: `linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.05))`,
-                border: `1px solid rgba(102, 126, 234, 0.2)`,
-                borderRadius: theme.borderRadius['2xl'],
-                padding: 'clamp(3rem, 6vw, 5rem) clamp(2rem, 4vw, 3rem)',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-            >
-              <div style={{
-                position: 'absolute',
-                top: 0,
-                left: '15%',
-                right: '15%',
-                height: '3px',
-                background: theme.colors.gradient.primary,
-              }} />
-
-              <div style={{
-                width: '80px',
-                height: '80px',
-                borderRadius: theme.borderRadius.xl,
-                background: theme.colors.gradient.primary,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                margin: '0 auto 2rem',
-                boxShadow: theme.shadows.glow,
-              }}>
-                <Sparkles size={36} color="#fff" strokeWidth={2.5} />
               </div>
 
-              <h2 className="heading-lg" style={{ marginBottom: '1.5rem' }}>
-                Ready to Bring Your<br />
-                <span className="text-gradient">Stories to Life?</span>
+              {/* Genre tags floating */}
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 0.3 }}
+                className="absolute top-8 left-8 bg-white rounded-2xl shadow-lg border border-gray-100 px-4 py-3"
+              >
+                <div className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">Trending Genres</div>
+                <div className="flex gap-2 flex-wrap">
+                  {['Fantasy', 'Sci-Fi', 'Romance'].map(g => (
+                    <span key={g} className="text-xs bg-blue-50 text-blue-700 px-2 py-1 rounded-full font-medium">{g}</span>
+                  ))}
+                </div>
+              </motion.div>
+
+              {/* Reader count badge */}
+              <motion.div
+                animate={{ y: [0, 10, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
+                className="absolute bottom-10 right-6 bg-white rounded-2xl shadow-xl border border-gray-100 px-4 py-3 flex items-center gap-3"
+              >
+                <div className="flex -space-x-1.5">
+                  {[20, 21, 22].map(i => (
+                    <img key={i} src={`https://i.pravatar.cc/40?img=${i}`} className="w-7 h-7 rounded-full border-2 border-white" alt="Reader" />
+                  ))}
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-gray-900">842 readers</div>
+                  <div className="text-xs text-slate-400">reading right now</div>
+                </div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. TRUST SECTION */}
+      <section className="py-10 border-y border-gray-100 bg-slate-50">
+        <div className="px-0 w-full text-center">
+          <p className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-6">
+            Trusted by modern creators at top companies
+          </p>
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+            {['Acme Corp', 'GlobalText', 'Pioneer Books', 'NovaMedia', 'Apex Publishing'].map(logo => (
+              <span key={logo} className="text-xl md:text-2xl font-bold text-slate-800 font-serif italic">{logo}</span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. FEATURE SHOWCASE */}
+      <section id="features" className="py-28 lg:py-36 bg-white relative">
+        <div className="w-full px-8 lg:px-12">
+          <div className="text-center  mx-auto mb-16">
+            <h2 className="text-4xl md:text-6xl font-extrabold text-gray-900 tracking-tight mb-6">
+              Everything you need to build <br/> a publishing empire.
+            </h2>
+            <p className="text-lg text-slate-500">
+              We’ve stripped away the complexity of traditional publishing and replaced it with elegant, powerful tools designed for the modern internet.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {[
+              { icon: Edit3, title: 'Distraction-free Editor', desc: 'A beautiful writing environment that gets out of your way. Markdown support, auto-save, and focus mode.' },
+              { icon: Layers, title: 'Version Control', desc: 'Never lose a draft. Track changes, restore previous versions, and collaborate seamlessly like software engineers.' },
+              { icon: Globe, title: 'Global Distribution', desc: 'Publish with one click. Your work is instantly formatted and distributed to readers worldwide in seconds.' },
+              { icon: BarChart3, title: 'Real-time Analytics', desc: 'Know exactly how your books are performing. Track reads, completion rates, and revenue in real-time.' },
+              { icon: Zap, title: 'AI Copilot', desc: 'Overcome writer\'s block. Generate ideas, summarize chapters, and refine your prose with our built-in AI.' },
+              { icon: CheckCircle2, title: 'Bank-grade Security', desc: 'Your intellectual property is protected with enterprise-grade encryption and automated cloud backups.' }
+            ].map((feature, idx) => (
+              <motion.div 
+                key={idx}
+                whileHover={{ y: -5 }}
+                className="bg-slate-50 rounded-2xl p-8 border border-gray-100 hover:border-blue-100 hover:bg-blue-50/50 transition-all group"
+              >
+                <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-blue-600 mb-6 group-hover:scale-110 transition-transform">
+                  <feature.icon size={24} strokeWidth={2} />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
+                <p className="text-slate-500 leading-relaxed">{feature.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. HOW IT WORKS */}
+      <section className="py-28 lg:py-36 bg-gray-900 text-white relative overflow-hidden">
+        {/* Subtle background glow */}
+        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none" />
+        
+        <div className="w-full px-8 lg:px-12 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-extrabold mb-4">The smoothest path to publishing</h2>
+            <p className="text-slate-400 text-lg">Go from blank page to published author in three simple steps.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-10 lg:gap-12 relative">
+            {/* Connecting line for desktop */}
+            <div className="hidden md:block absolute top-12 left-[15%] right-[15%] h-px bg-gradient-to-r from-transparent via-slate-700 to-transparent" />
+
+            {[
+              { step: '01', title: 'Write & Format', desc: 'Draft your story in our intuitive editor. We automatically format it to industry standards.', icon: PenTool },
+              { step: '02', title: 'Publish to Hub', desc: 'Set your price, add metadata, and click publish. Your book goes live instantly on our marketplace.', icon: Globe },
+              { step: '03', title: 'Earn Royalties', desc: 'Readers discover your book. You keep 90% of revenue, paid out daily via Stripe.', icon: BarChart3 }
+            ].map((item, idx) => (
+              <div key={idx} className="relative z-10 flex flex-col items-center text-center">
+                <div className="w-24 h-24 bg-gray-800 rounded-full border-8 border-gray-900 flex items-center justify-center mb-6 shadow-xl relative group">
+                  <div className="absolute inset-0 bg-blue-500 rounded-full opacity-0 group-hover:opacity-20 transition-opacity blur-lg" />
+                  <item.icon size={32} className="text-blue-400" />
+                  <div className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs font-bold w-8 h-8 rounded-full flex items-center justify-center border-2 border-gray-900">
+                    {item.step}
+                  </div>
+                </div>
+                <h3 className="text-xl font-bold mb-3">{item.title}</h3>
+                <p className="text-slate-400">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6. AUTHOR EXPERIENCE — Writing & Publishing focus */}
+      <section className="py-28 lg:py-36 bg-white overflow-hidden">
+        <div className="w-full px-8 lg:px-12">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-100 text-sm font-semibold text-blue-700 mb-6">
+                <Edit3 size={14} /> For Authors
+              </div>
+              <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6">
+                Write, publish, and grow your readership.
               </h2>
-
-              <p style={{
-                fontSize: 'clamp(1rem, 2vw, 1.125rem)',
-                color: theme.colors.text.muted,
-                maxWidth: '600px',
-                margin: '0 auto 3rem',
-                lineHeight: 1.7,
-              }}>
-                Join over 100,000 creators worldwide who are already using ComixNova to transform their ideas into professional comics.
+              <p className="text-lg text-slate-500 mb-8 leading-relaxed">
+                Everything a modern author needs — a beautiful editor, one-click publishing, and a built-in audience of passionate readers who are waiting for your next story.
               </p>
-
-              <motion.button
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={onGetStarted}
-                className="btn btn-primary"
-                style={{
-                  padding: '1.25rem 3rem',
-                  fontSize: '1.125rem',
-                }}
+              
+              <ul className="space-y-6">
+                {[
+                  { title: 'Distraction-free writing', desc: 'A clean, focused editor that feels like your favorite notebook. Write in flow state.' },
+                  { title: 'One-click to global readers', desc: 'Publish your book and it instantly appears in our global reader marketplace.' },
+                  { title: 'Build your author profile', desc: 'Your public profile page showcases your works, bio, and lets readers follow you.' }
+                ].map((item, idx) => (
+                  <li key={idx} className="flex gap-4">
+                    <div className="mt-1 bg-blue-50 text-blue-600 rounded-full p-1.5 h-fit">
+                      <CheckCircle2 size={16} strokeWidth={3} />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-900">{item.title}</h4>
+                      <p className="text-slate-500 text-sm mt-1">{item.desc}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              
+              <button onClick={onGetStarted} className="mt-10 bg-blue-600 text-white px-7 py-3.5 rounded-full font-semibold flex items-center gap-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 w-fit">
+                Start Writing Free <ArrowRight size={18} />
+              </button>
+            </div>
+            
+            <div className="relative">
+              <div className="absolute -inset-4 bg-gradient-to-br from-blue-50 to-slate-50 rounded-3xl transform rotate-2" />
+              {/* Open book / reading scene */}
+              <img 
+                src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&q=80&w=1000" 
+                alt="Author Writing" 
+                className="relative rounded-2xl shadow-2xl border border-gray-100 object-cover h-[500px] w-full"
+              />
+              {/* Floating reading card */}
+              <motion.div 
+                animate={{ y: [0, -12, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute -left-6 bottom-12 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 w-52"
               >
-                Start Creating Free Today
-                <ArrowRight size={22} strokeWidth={2.5} />
-              </motion.button>
-
-              <p style={{
-                fontSize: '0.875rem',
-                color: theme.colors.text.disabled,
-                marginTop: '1.5rem',
-              }}>
-                No credit card required • Unlimited free plan available
-              </p>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Footer */}
-        <footer style={{
-          position: 'relative',
-          zIndex: 10,
-          borderTop: `1px solid ${theme.colors.border.base}`,
-          background: 'rgba(10, 14, 39, 0.6)',
-          backdropFilter: 'blur(20px)',
-          padding: 'clamp(3rem, 6vw, 5rem) clamp(1rem, 5vw, 3rem) 2.5rem',
-        }}>
-          <div className="container">
-            <div className="grid grid-4" style={{ marginBottom: '4rem' }}>
-              <div>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.75rem',
-                  marginBottom: '1.5rem',
-                }}>
-                  <div style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: theme.borderRadius.md,
-                    background: theme.colors.gradient.primary,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: theme.shadows.glow,
-                  }}>
-                    <Sparkles size={20} color="#fff" strokeWidth={2.5} />
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-8 h-8 rounded-lg overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?w=80&q=80" alt="cover" className="w-full h-full object-cover" />
                   </div>
-                  <span style={{
-                    fontSize: '1.375rem',
-                    fontWeight: 900,
-                    background: theme.colors.gradient.primary,
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}>
-                    ComixNova
-                  </span>
+                  <div>
+                    <div className="text-xs font-bold text-gray-900 leading-tight">The Last Chapter</div>
+                    <div className="text-xs text-slate-400">by A. Rahman</div>
+                  </div>
                 </div>
-                <p style={{
-                  fontSize: '0.9375rem',
-                  color: theme.colors.text.muted,
-                  lineHeight: 1.7,
-                  maxWidth: '280px',
-                }}>
-                  Transform your creative ideas into stunning comics with the power of AI. Fast, easy, and professional.
-                </p>
+                <div className="flex gap-0.5 mb-1">
+                  {[1,2,3,4,5].map(s => <Star key={s} size={10} className="fill-amber-500 text-amber-500" />)}
+                </div>
+                <div className="text-xs text-slate-500">"A masterpiece of modern fiction."</div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. READER EXPERIENCE — Visual reading showcase */}
+      <section className="py-28 lg:py-36 bg-gray-950 text-white overflow-hidden relative">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(37,99,235,0.15),_transparent_60%)]" />
+        <div className="w-full px-8 lg:px-12 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            {/* Reading UI mockup */}
+            <div className="relative order-2 lg:order-1">
+              <div className="bg-gray-900 rounded-3xl border border-gray-800 overflow-hidden shadow-2xl">
+                {/* Reader top bar */}
+                <div className="flex items-center justify-between px-6 py-4 border-b border-gray-800">
+                  <span className="text-sm text-gray-400">Chapter 7 · The Hidden Valley</span>
+                  <div className="flex items-center gap-3">
+                    <BookMarked size={16} className="text-blue-400" />
+                    <Smartphone size={16} className="text-gray-500" />
+                  </div>
+                </div>
+                {/* Reader content */}
+                <div className="p-8">
+                  <div className="text-2xl font-bold text-white mb-4">The Hidden Valley</div>
+                  <div className="space-y-3">
+                    <div className="h-3 bg-gray-700 rounded-full" />
+                    <div className="h-3 bg-gray-700 rounded-full w-11/12" />
+                    <div className="h-3 bg-gray-700 rounded-full w-4/5" />
+                    {/* Highlighted sentence */}
+                    <div className="bg-amber-500/20 border-l-2 border-amber-400 pl-3 py-2 rounded-r-lg">
+                      <div className="h-3 bg-amber-400/40 rounded-full" />
+                    </div>
+                    <div className="h-3 bg-gray-700 rounded-full" />
+                    <div className="h-3 bg-gray-700 rounded-full w-10/12" />
+                    <div className="h-3 bg-gray-700 rounded-full w-3/4" />
+                    <div className="h-3 bg-gray-700 rounded-full" />
+                    <div className="h-3 bg-gray-700 rounded-full w-5/6" />
+                  </div>
+                </div>
+                {/* Progress bar */}
+                <div className="px-8 pb-6">
+                  <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
+                    <span>Page 142 of 380</span><span>37% complete</span>
+                  </div>
+                  <div className="w-full bg-gray-800 rounded-full h-1.5">
+                    <div className="bg-blue-500 h-1.5 rounded-full w-[37%]" />
+                  </div>
+                </div>
               </div>
 
-              {[
-                {
-                  heading: 'Product',
-                  links: ['Features', 'Pricing', 'How It Works', 'Templates', 'API'],
-                },
-                {
-                  heading: 'Company',
-                  links: ['About Us', 'Blog', 'Careers', 'Press Kit', 'Contact'],
-                },
-                {
-                  heading: 'Resources',
-                  links: ['Help Center', 'Community', 'Tutorials', 'Documentation', 'Status'],
-                },
-              ].map((column) => (
-                <div key={column.heading}>
-                  <h4 style={{
-                    fontSize: '0.875rem',
-                    fontWeight: 700,
-                    letterSpacing: '0.08em',
-                    textTransform: 'uppercase',
-                    color: theme.colors.text.muted,
-                    marginBottom: '1.5rem',
-                  }}>
-                    {column.heading}
-                  </h4>
-                  <ul style={{
-                    listStyle: 'none',
-                    padding: 0,
-                    margin: 0,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '0.875rem',
-                  }}>
-                    {column.links.map((link) => (
-                      <li key={link}>
-                        <a
-                          href="#"
-                          style={{
-                            fontSize: '0.9375rem',
-                            color: theme.colors.text.muted,
-                            textDecoration: 'none',
-                            transition: theme.transitions.fast,
-                          }}
-                          onMouseEnter={(e: MouseEvent<HTMLAnchorElement>) => e.currentTarget.style.color = theme.colors.text.primary}
-                          onMouseLeave={(e: MouseEvent<HTMLAnchorElement>) => e.currentTarget.style.color = theme.colors.text.muted}
-                        >
-                          {link}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+              {/* Floating highlight note */}
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                className="absolute -right-4 top-16 bg-amber-50 border border-amber-200 rounded-2xl shadow-lg px-4 py-3 w-48"
+              >
+                <div className="text-xs font-bold text-amber-800 mb-1">📌 Your Highlight</div>
+                <div className="text-xs text-amber-700 italic">"The mountains kept their secrets..."</div>
+              </motion.div>
             </div>
 
-            <div style={{
-              borderTop: `1px solid ${theme.colors.border.base}`,
-              paddingTop: '2rem',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexWrap: 'wrap',
-              gap: '1.5rem',
-            }}>
-              <p style={{
-                fontSize: '0.875rem',
-                color: theme.colors.text.muted,
-              }}>
-                © 2025 ComixNova. All rights reserved. Built with passion for storytellers worldwide.
+            {/* Text side */}
+            <div className="order-1 lg:order-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-900/40 border border-blue-700/40 text-sm font-semibold text-blue-300 mb-6">
+                <BookOpen size={14} /> For Readers
+              </div>
+              <h2 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight">
+                Read anywhere. <br /><span className="text-blue-400">Lose yourself</span> in every page.
+              </h2>
+              <p className="text-lg text-gray-400 mb-8 leading-relaxed">
+                Our reader is built for people who truly love books. Highlight passages, leave notes, bookmark chapters, and sync your progress across every device — all for free.
               </p>
-
-              <div style={{
-                display: 'flex',
-                gap: '1rem',
-              }}>
+              <div className="grid grid-cols-2 gap-4">
                 {[
-                  { icon: Globe, label: 'Website' },
-                  { icon: MessageCircle, label: 'Discord' },
-                  { icon: Award, label: 'Twitter' },
-                ].map(({ icon: Icon, label }) => (
-                  <motion.a
-                    key={label}
-                    href="#"
-                    aria-label={label}
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.9 }}
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: theme.borderRadius.md,
-                      background: theme.colors.surface.base,
-                      border: `1px solid ${theme.colors.border.base}`,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: theme.colors.text.muted,
-                      transition: theme.transitions.normal,
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = theme.colors.primary;
-                      e.currentTarget.style.borderColor = theme.colors.border.hover;
-                      e.currentTarget.style.background = theme.colors.surface.hover;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = theme.colors.text.muted;
-                      e.currentTarget.style.borderColor = theme.colors.border.base;
-                      e.currentTarget.style.background = theme.colors.surface.base;
-                    }}
-                  >
-                    <Icon size={18} strokeWidth={2} />
-                  </motion.a>
+                  { icon: '🌙', label: 'Night Mode', desc: 'Easy on the eyes' },
+                  { icon: '📝', label: 'Highlights', desc: 'Mark your favorites' },
+                  { icon: '🔖', label: 'Bookmarks', desc: 'Never lose your place' },
+                  { icon: '📱', label: 'Cross-device', desc: 'Any screen, anytime' },
+                ].map(f => (
+                  <div key={f.label} className="bg-gray-900 border border-gray-800 rounded-xl p-4">
+                    <div className="text-2xl mb-2">{f.icon}</div>
+                    <div className="font-semibold text-white text-sm">{f.label}</div>
+                    <div className="text-gray-500 text-xs mt-0.5">{f.desc}</div>
+                  </div>
                 ))}
               </div>
             </div>
           </div>
-        </footer>
-      </div>
-    </>
+        </div>
+      </section>
+
+      {/* 8. MARKETPLACE PREVIEW */}
+      <section id="explore" className="py-28 lg:py-36 bg-white relative overflow-hidden">
+        <div className="w-full px-8 lg:px-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">Discover your next obsession.</h2>
+              <p className="text-lg text-slate-500 ">Explore thousands of premium stories, comics, and graphic novels published daily by independent creators.</p>
+            </div>
+            <button className="bg-slate-100 hover:bg-slate-200 text-slate-900 px-6 py-3 rounded-full font-semibold transition-colors flex items-center gap-2 w-fit">
+              Browse the Hub <ArrowRight size={16} />
+            </button>
+          </div>
+
+          {/* Categories */}
+          <div className="flex gap-4 overflow-x-auto pb-6 scrollbar-hide">
+            {['All', 'Fantasy', 'Sci-Fi', 'Romance', 'Thriller', 'Manga', 'Non-Fiction'].map((cat, i) => (
+              <button key={cat} className={`whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-semibold border transition-all ${i === 0 ? 'bg-gray-900 text-white border-gray-900' : 'bg-white text-slate-600 border-gray-200 hover:border-gray-900 hover:text-gray-900'}`}>
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Trending Books Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 mt-8">
+            {[1, 2, 3, 4, 5].map(i => (
+              <div key={i} className="group cursor-pointer">
+                <div className="relative aspect-[2/3] rounded-xl overflow-hidden mb-4 shadow-sm group-hover:shadow-xl transition-all duration-300">
+                  <img src={`https://picsum.photos/seed/${i+100}/400/600`} alt="Book Cover" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                </div>
+                <h4 className="font-bold text-gray-900 truncate">The Echoes of Time</h4>
+                <p className="text-sm text-slate-500 truncate mb-2">By Sarah Jenkins</p>
+                <div className="flex items-center gap-1 text-xs font-semibold text-amber-500">
+                  <Star size={12} className="fill-current" /> 4.9 <span className="text-slate-400 font-normal">(1.2k)</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 9. SOCIAL PROOF */}
+      <section className="py-28 lg:py-36 bg-white">
+        <div className="w-full px-8 lg:px-12">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">Loved by authors globally.</h2>
+            <p className="text-lg text-slate-500">Don't just take our word for it.</p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-10">
+            {[
+              { name: 'Sarah Jenkins', role: 'Bestselling Sci-Fi Author', text: 'ComixNova completely changed my workflow. The dashboard is intuitive, and the payouts are instant. I moved my entire catalog here.' },
+              { name: 'Marcus Chen', role: 'Comic Creator', text: 'The visual quality of the reader is unmatched. My illustrations look crisp, and my readers love the dark mode experience.' },
+              { name: 'Elena Rodriguez', role: 'Independent Publisher', text: 'Finally, a platform that respects creators. The analytics give me the exact data I need to plan my next marketing push.' }
+            ].map((t, idx) => (
+              <div key={idx} className="bg-slate-50 rounded-2xl p-8 border border-gray-100">
+                <div className="flex gap-1 mb-4 text-amber-500">
+                  <Star size={18} className="fill-current" /><Star size={18} className="fill-current" /><Star size={18} className="fill-current" /><Star size={18} className="fill-current" /><Star size={18} className="fill-current" />
+                </div>
+                <p className="text-gray-900 mb-6 font-medium leading-relaxed">"{t.text}"</p>
+                <div className="flex items-center gap-4">
+                  <img src={`https://i.pravatar.cc/150?img=${idx + 30}`} alt={t.name} className="w-12 h-12 rounded-full object-cover" />
+                  <div>
+                    <h4 className="font-bold text-gray-900 text-sm">{t.name}</h4>
+                    <span className="text-slate-500 text-xs">{t.role}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 10. PRICING */}
+      <section id="pricing" className="py-28 lg:py-36 bg-slate-50 border-t border-gray-100">
+        <div className="w-full px-8 lg:px-12">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4">Simple, transparent pricing.</h2>
+            <p className="text-lg text-slate-500">Start for free, upgrade when you need more power.</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-10 ">
+            {/* Free */}
+            <div className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm flex flex-col">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Hobby</h3>
+              <p className="text-slate-500 text-sm mb-6">Perfect for testing the waters.</p>
+              <div className="mb-6"><span className="text-4xl font-extrabold text-gray-900">$0</span><span className="text-slate-500">/mo</span></div>
+              <ul className="space-y-4 mb-8 flex-1">
+                <li className="flex items-center gap-3 text-sm text-gray-600"><CheckCircle2 size={18} className="text-emerald-500" /> Up to 3 published books</li>
+                <li className="flex items-center gap-3 text-sm text-gray-600"><CheckCircle2 size={18} className="text-emerald-500" /> Standard reader UI</li>
+                <li className="flex items-center gap-3 text-sm text-gray-600"><CheckCircle2 size={18} className="text-emerald-500" /> Basic analytics</li>
+                <li className="flex items-center gap-3 text-sm text-gray-600"><CheckCircle2 size={18} className="text-emerald-500" /> 80% Royalty Share</li>
+              </ul>
+              <button className="w-full py-3 rounded-xl border border-gray-200 text-gray-900 font-semibold hover:bg-slate-50 transition-colors">Start Free</button>
+            </div>
+
+            {/* Pro */}
+            <div className="bg-gray-900 rounded-3xl p-8 border border-gray-800 shadow-2xl flex flex-col relative transform md:-translate-y-4">
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold tracking-wide uppercase">Most Popular</div>
+              <h3 className="text-xl font-bold text-white mb-2">Professional</h3>
+              <p className="text-gray-400 text-sm mb-6">For serious authors and creators.</p>
+              <div className="mb-6"><span className="text-4xl font-extrabold text-white">$19</span><span className="text-gray-400">/mo</span></div>
+              <ul className="space-y-4 mb-8 flex-1">
+                <li className="flex items-center gap-3 text-sm text-gray-300"><CheckCircle2 size={18} className="text-blue-500" /> Unlimited books</li>
+                <li className="flex items-center gap-3 text-sm text-gray-300"><CheckCircle2 size={18} className="text-blue-500" /> Advanced real-time analytics</li>
+                <li className="flex items-center gap-3 text-sm text-gray-300"><CheckCircle2 size={18} className="text-blue-500" /> AI writing tools included</li>
+                <li className="flex items-center gap-3 text-sm text-white font-medium"><CheckCircle2 size={18} className="text-blue-500" /> 90% Royalty Share</li>
+              </ul>
+              <button className="w-full py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20">Get Pro</button>
+            </div>
+
+            {/* Enterprise */}
+            <div className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm flex flex-col">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Publisher</h3>
+              <p className="text-slate-500 text-sm mb-6">For studios and publishing houses.</p>
+              <div className="mb-6"><span className="text-4xl font-extrabold text-gray-900">$99</span><span className="text-slate-500">/mo</span></div>
+              <ul className="space-y-4 mb-8 flex-1">
+                <li className="flex items-center gap-3 text-sm text-gray-600"><CheckCircle2 size={18} className="text-emerald-500" /> Everything in Pro</li>
+                <li className="flex items-center gap-3 text-sm text-gray-600"><CheckCircle2 size={18} className="text-emerald-500" /> Multi-user team access</li>
+                <li className="flex items-center gap-3 text-sm text-gray-600"><CheckCircle2 size={18} className="text-emerald-500" /> API access</li>
+                <li className="flex items-center gap-3 text-sm text-gray-600"><CheckCircle2 size={18} className="text-emerald-500" /> Custom domain storefront</li>
+              </ul>
+              <button className="w-full py-3 rounded-xl border border-gray-200 text-gray-900 font-semibold hover:bg-slate-50 transition-colors">Contact Sales</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 12. FINAL CTA */}
+      <section className="py-32 relative overflow-hidden bg-white">
+        <div className="absolute inset-0 bg-blue-600/5" />
+        <div className=" px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+          <h2 className="text-6xl md:text-7xl font-extrabold text-gray-900 mb-8 tracking-tight">
+            Your Story Deserves <br className="hidden md:block"/> the World.
+          </h2>
+          <p className="text-xl text-slate-500 mb-10 ">
+            Join thousands of authors who are building their legacy on the most advanced publishing platform ever created.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button onClick={onGetStarted} className="bg-gray-900 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-gray-800 transition-all shadow-xl hover:-translate-y-1">
+              Start Publishing Free
+            </button>
+            <button className="bg-white text-gray-900 border border-gray-200 px-8 py-4 rounded-full text-lg font-medium hover:bg-slate-50 transition-all">
+              Explore the Hub
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* 13. FOOTER */}
+      <footer className="bg-gray-900 text-slate-400 py-16 border-t border-gray-800">
+        <div className="w-full px-8 lg:px-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+            <div className="col-span-2 lg:col-span-2">
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white">
+                  <BookOpen size={16} />
+                </div>
+                <span className="text-xl font-bold text-white">ComixNova</span>
+              </div>
+              <p className="text-sm mb-6 ">
+                The world's most elegant platform for writing, publishing, and discovering great stories.
+              </p>
+              <div className="flex gap-4">
+                <a href="#" className="text-slate-400 hover:text-white transition-colors"><Share2 size={20} /></a>
+                <a href="#" className="text-slate-400 hover:text-white transition-colors"><Globe size={20} /></a>
+                <a href="#" className="text-slate-400 hover:text-white transition-colors"><Users size={20} /></a>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="text-white font-semibold mb-4">Product</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Author Hub</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Reader App</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-white font-semibold mb-4">Resources</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Community</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="text-white font-semibold mb-4">Company</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#" className="hover:text-white transition-colors">About Us</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
+            <p>© 2026 ComixNova Inc. All rights reserved.</p>
+            <div className="flex gap-6">
+              <span>Made with ❤️ for creators</span>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 }
+
+
+
+
+
+
+
+

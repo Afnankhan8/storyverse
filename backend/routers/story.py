@@ -1,5 +1,5 @@
 """
-comic_router.py  ─  Bookify AI  ─  Ultra Quality Production Build
+comic_router.py  ─  ComixNova AI  ─  Ultra Quality Production Build
 ══════════════════════════════════════════════════════════════════
 
 Panel = 1024 × 1280 px — every pixel intentional:
