@@ -55,7 +55,7 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
   const [activeTab, setActiveTab] = useState<Tab>('overview');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive' | 'banned'>('all');
-  
+
   // Modal states
   const [showUserModal, setShowUserModal] = useState(false);
   const [editingUser, setEditingUser] = useState<UserData | null>(null);
@@ -63,7 +63,7 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
   const [formData, setFormData] = useState({
     name: '', email: '', credits: 10, plan: 'free' as 'free' | 'pro' | 'team', status: 'active' as 'active' | 'inactive' | 'banned'
   });
-  
+
   const [showCreditsModal, setShowCreditsModal] = useState(false);
   const [creditsUser, setCreditsUser] = useState<UserData | null>(null);
   const [creditAdjustment, setCreditAdjustment] = useState({ mode: 'set', value: 0 });
@@ -92,20 +92,20 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
       console.error('Firestore error:', error);
       setLoading(false);
     });
-    
+
     const qBooks = query(collection(db, 'published_books'), where('status', '==', 'pending'));
     const unsubscribeBooks = onSnapshot(qBooks, (snapshot) => {
       const booksData: BookData[] = [];
       snapshot.forEach(d => booksData.push({ id: d.id, ...d.data() } as BookData));
       setPendingBooks(booksData);
     });
-    
+
     return () => { unsubscribe(); unsubscribeBooks(); };
   }, []);
 
   const filteredUsers = users.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          user.email.toLowerCase().includes(searchTerm.toLowerCase());
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || user.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
@@ -117,7 +117,7 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
   const proUsers = users.filter(u => u.plan === 'pro').length;
   const teamUsers = users.filter(u => u.plan === 'team').length;
   const freeUsers = totalUsers - proUsers - teamUsers;
-  const topUsersByCredits = [...users].sort((a,b) => b.credits - a.credits).slice(0,5);
+  const topUsersByCredits = [...users].sort((a, b) => b.credits - a.credits).slice(0, 5);
 
   const handleSaveUser = async () => {
     setModalLoading(true);
@@ -206,16 +206,15 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
             <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400">Superuser Portal</p>
           </div>
         </div>
-        
+
         <div className="flex-1 py-6 px-4 space-y-1 overflow-y-auto">
           <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 px-2">Menu</div>
           {tabs.map(tab => {
             const isActive = activeTab === tab.id;
             return (
               <button key={tab.id} onClick={() => setActiveTab(tab.id as Tab)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${
-                  isActive ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                }`}>
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${isActive ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  }`}>
                 <tab.icon size={18} className={isActive ? 'text-blue-600' : 'text-slate-400'} />
                 {tab.label}
                 {tab.badge !== undefined && tab.badge > 0 && (
@@ -255,7 +254,7 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
         <main className="flex-1 overflow-y-auto p-8">
           <AnimatePresence mode="wait">
             <motion.div key={activeTab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.2 }}>
-              
+
               {/* OVERVIEW TAB */}
               {activeTab === 'overview' && (
                 <div className="space-y-6">
@@ -266,7 +265,7 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
                         <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center"><Users size={16} className="text-blue-600" /></div>
                       </div>
                       <p className="text-3xl font-black text-slate-900">{totalUsers.toLocaleString()}</p>
-                      <p className="text-sm text-emerald-600 font-medium mt-2 flex items-center gap-1"><CheckCircle2 size={14}/> {activeUsers} active</p>
+                      <p className="text-sm text-emerald-600 font-medium mt-2 flex items-center gap-1"><CheckCircle2 size={14} /> {activeUsers} active</p>
                     </div>
                     <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                       <div className="flex items-center justify-between mb-4">
@@ -274,7 +273,7 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
                         <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center"><BookOpen size={16} className="text-indigo-600" /></div>
                       </div>
                       <p className="text-3xl font-black text-slate-900">4,281</p>
-                      <p className="text-sm text-blue-600 font-medium mt-2 flex items-center gap-1"><BookText size={14}/> {pendingBooks.length} pending review</p>
+                      <p className="text-sm text-blue-600 font-medium mt-2 flex items-center gap-1"><BookText size={14} /> {pendingBooks.length} pending review</p>
                     </div>
                     <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                       <div className="flex items-center justify-between mb-4">
@@ -320,12 +319,12 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
                           <div className="p-5 flex flex-col">
                             <h3 className="font-bold text-slate-900 mb-1 truncate" title={book.title}>{book.title}</h3>
                             <p className="text-sm text-slate-500 mb-3 truncate">By {book.author}</p>
-                            
+
                             <div className="flex flex-wrap gap-1.5 mb-5">
                               <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[10px] font-bold uppercase tracking-wider">{book.genre}</span>
                               <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded-md text-[10px] font-bold uppercase tracking-wider">{book.audience || 'General'}</span>
                             </div>
-                            
+
                             <div className="mt-auto grid grid-cols-2 gap-2">
                               <button onClick={() => handleRejectBook(book.id)} className="flex items-center justify-center gap-1.5 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl font-bold text-sm transition-colors">
                                 <XCircle size={15} /> Reject
@@ -399,18 +398,16 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
                                 </div>
                               </td>
                               <td className="px-6 py-4">
-                                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                                  user.status === 'active' ? 'bg-emerald-100 text-emerald-700' :
-                                  user.status === 'banned' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'
-                                }`}>
+                                <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${user.status === 'active' ? 'bg-emerald-100 text-emerald-700' :
+                                    user.status === 'banned' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'
+                                  }`}>
                                   {user.status}
                                 </span>
                               </td>
                               <td className="px-6 py-4">
-                                <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${
-                                  user.plan === 'pro' ? 'bg-violet-50 text-violet-700 border-violet-200' :
-                                  user.plan === 'team' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-slate-50 text-slate-600 border-slate-200'
-                                }`}>
+                                <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border ${user.plan === 'pro' ? 'bg-violet-50 text-violet-700 border-violet-200' :
+                                    user.plan === 'team' ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-slate-50 text-slate-600 border-slate-200'
+                                  }`}>
                                   {user.plan}
                                 </span>
                               </td>
@@ -430,11 +427,11 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
                                     className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Edit User">
                                     <Edit2 size={16} />
                                   </button>
-                                  <button onClick={() => handleBanToggle(user)} 
+                                  <button onClick={() => handleBanToggle(user)}
                                     className="p-1.5 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" title={user.status === 'banned' ? 'Unban User' : 'Ban User'}>
                                     <Ban size={16} />
                                   </button>
-                                  <button onClick={() => setDeleteConfirm(user.id)} 
+                                  <button onClick={() => setDeleteConfirm(user.id)}
                                     className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Delete User">
                                     <Trash2 size={16} />
                                   </button>
@@ -473,7 +470,7 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
                         ))}
                       </div>
                     </div>
-                    
+
                     <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                       <h3 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2"><Zap size={18} className="text-amber-500" /> Top Users by Credits</h3>
                       <div className="space-y-3">
@@ -496,7 +493,7 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
               {activeTab === 'settings' && (
                 <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm max-w-2xl">
                   <h3 className="text-xl font-black text-slate-900 mb-6 flex items-center gap-2"><Settings size={20} className="text-slate-400" /> System Configuration</h3>
-                  
+
                   <div className="space-y-6">
                     <div>
                       <h4 className="text-sm font-bold text-slate-900 mb-2">Admin Account Details</h4>
@@ -511,7 +508,7 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
                         </div>
                       </div>
                     </div>
-                    
+
                     <div>
                       <h4 className="text-sm font-bold text-slate-900 mb-2">Database Connection</h4>
                       <div className="flex items-center gap-3 p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800">
@@ -542,20 +539,20 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
               <div className="p-6 space-y-4">
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Full Name</label>
-                  <input type="text" placeholder="John Doe" value={formData.name} onChange={e=>setFormData({...formData, name:e.target.value})} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                  <input type="text" placeholder="John Doe" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Email Address</label>
-                  <input type="email" placeholder="john@example.com" value={formData.email} onChange={e=>setFormData({...formData, email:e.target.value})} disabled={!!editingUser} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-60" />
+                  <input type="email" placeholder="john@example.com" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} disabled={!!editingUser} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-60" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Credits</label>
-                    <input type="number" value={formData.credits} onChange={e=>setFormData({...formData, credits:parseInt(e.target.value) || 0})} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <input type="number" value={formData.credits} onChange={e => setFormData({ ...formData, credits: parseInt(e.target.value) || 0 })} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Plan</label>
-                    <select value={formData.plan} onChange={e=>setFormData({...formData, plan:e.target.value as any})} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <select value={formData.plan} onChange={e => setFormData({ ...formData, plan: e.target.value as any })} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                       <option value="free">Free</option>
                       <option value="pro">Pro</option>
                       <option value="team">Team</option>
@@ -564,7 +561,7 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Status</label>
-                  <select value={formData.status} onChange={e=>setFormData({...formData, status:e.target.value as any})} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <select value={formData.status} onChange={e => setFormData({ ...formData, status: e.target.value as any })} className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
                     <option value="banned">Banned</option>
@@ -594,14 +591,14 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
                   <span className="text-lg font-mono font-black text-blue-600">{creditsUser.credits}</span>
                 </div>
                 <div className="flex gap-2 mb-4 bg-slate-100 p-1 rounded-xl">
-                  {['set','add','subtract'].map(mode => (
-                    <button key={mode} onClick={() => setCreditAdjustment({...creditAdjustment, mode})} 
+                  {['set', 'add', 'subtract'].map(mode => (
+                    <button key={mode} onClick={() => setCreditAdjustment({ ...creditAdjustment, mode })}
                       className={`flex-1 py-2 rounded-lg text-xs font-bold capitalize transition-all ${creditAdjustment.mode === mode ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>
                       {mode}
                     </button>
                   ))}
                 </div>
-                <input type="number" value={creditAdjustment.value} onChange={e=>setCreditAdjustment({...creditAdjustment, value:parseInt(e.target.value) || 0})} className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-lg font-mono text-center focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2" placeholder="0" />
+                <input type="number" value={creditAdjustment.value} onChange={e => setCreditAdjustment({ ...creditAdjustment, value: parseInt(e.target.value) || 0 })} className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-lg font-mono text-center focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2" placeholder="0" />
               </div>
               <div className="p-6 bg-slate-50 border-t border-slate-100 flex gap-3">
                 <button onClick={() => setShowCreditsModal(false)} className="flex-1 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors">Cancel</button>

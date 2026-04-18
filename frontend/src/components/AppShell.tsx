@@ -528,470 +528,472 @@ export default function AppShell({ children, user, onLogout }: AppShellProps) {
         <motion.div
           className="hidden lg:flex flex-shrink-0 overflow-hidden"
           animate={{ width: collapsed ? SIDEBAR_COLLAPSED : SIDEBAR_WIDTH }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.3, ease: "easeInOut"0.22, 1, 0.36, 1] }}
         >
-          {SidebarInner}
-        </motion.div>
+        {SidebarInner}
+      </motion.div>
 
-        {/* Mobile overlay */}
-        <AnimatePresence>
-          {mobileOpen && (
-            <>
-              <motion.div
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="fixed inset-0 bg-black/65 z-40 lg:hidden backdrop-blur-md"
-                onClick={() => setMobileOpen(false)}
-              />
-              <motion.div
-                initial={{ x: -SIDEBAR_WIDTH }} animate={{ x: 0 }} exit={{ x: -SIDEBAR_WIDTH }}
-                transition={{ type: 'spring', stiffness: 320, damping: 32 }}
-                className="fixed left-0 top-0 bottom-0 z-50 lg:hidden"
-                style={{ width: SIDEBAR_WIDTH }}
-                onClick={e => e.stopPropagation()}
-              >
-                {SidebarInner}
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-
-        {/* Main area */}
-        <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-
-          {/* ══════════ TOPBAR ══════════ */}
-          <header
-            className="flex-shrink-0 relative z-30"
-            style={{
-              background: 'linear-gradient(135deg, #070A17 0%, #0B0F26 50%, #070A17 100%)',
-              borderBottom: '1px solid rgba(255,255,255,0.07)',
-              boxShadow: '0 1px 0 rgba(255,255,255,0.04), 0 8px 28px -8px rgba(0,0,0,0.45)',
-            }}
-            onClick={() => setNotifOpen(false)}
-          >
-            {/* Top shimmer line */}
-            <div
-              className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none overflow-hidden"
-              style={{ background: 'linear-gradient(90deg, transparent, rgba(20,184,166,0.7), rgba(139,92,246,0.5), rgba(59,130,246,0.5), transparent)' }}
-            />
-
-            {/* Ambient glow */}
-            <div
-              className="absolute top-0 left-1/3 w-[500px] h-full pointer-events-none opacity-60"
-              style={{ background: 'radial-gradient(ellipse at center, rgba(20,184,166,0.1) 0%, transparent 60%)' }}
-            />
-
-            <div className="relative flex items-center gap-3 px-6 py-3.5">
-              {/* Mobile hamburger */}
-              <button
-                onClick={() => setMobileOpen(true)}
-                className="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl text-slate-300 hover:text-white active:scale-90"
-                style={{
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(255,255,255,0.09)',
-                  transition: 'all 0.2s ease',
-                }}
-              >
-                <Menu size={18} />
-              </button>
-
-              {/* Search bar */}
-              <button
-                onClick={() => setSearchOpen(true)}
-                className="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium flex-1 max-w-md group active:scale-[0.99]"
-                style={{
-                  background: 'rgba(255,255,255,0.05)',
-                  border: '1px solid rgba(255,255,255,0.09)',
-                  transition: 'all 0.25s ease',
-                }}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(20,184,166,0.4)';
-                  (e.currentTarget as HTMLElement).style.boxShadow = '0 0 0 3px rgba(20,184,166,0.1)';
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)';
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.09)';
-                  (e.currentTarget as HTMLElement).style.boxShadow = 'none';
-                }}
-              >
-                <Search size={16} className="text-slate-400 group-hover:text-teal-400 flex-shrink-0" style={{ transition: 'color 0.25s' }} />
-                <span className="flex-1 text-left text-[14px] text-slate-400 group-hover:text-slate-200" style={{ transition: 'color 0.25s' }}>
-                  Search books, notes, authors…
-                </span>
-                <kbd
-                  className="hidden sm:flex items-center gap-0.5 text-[10px] px-2 py-1 rounded font-mono text-slate-300"
-                  style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)' }}
-                >
-                  <Command size={9} />K
-                </kbd>
-              </button>
-
-              {/* Right actions */}
-              <div className="flex items-center gap-2.5 ml-auto">
-                {/* Upload CTA */}
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => navigate('/upload')}
-                  className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-[14px] font-bold text-white relative overflow-hidden group"
-                  style={{
-                    background: 'linear-gradient(135deg, #2DD4BF 0%, #14B8A6 100%)',
-                    boxShadow: '0 4px 18px rgba(20,184,166,0.4), inset 0 1px 0 rgba(255,255,255,0.25)',
-                    transition: 'box-shadow 0.25s ease',
-                  }}
-                  onMouseEnter={e => {
-                    (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 24px rgba(20,184,166,0.55), inset 0 1px 0 rgba(255,255,255,0.3)';
-                  }}
-                  onMouseLeave={e => {
-                    (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 18px rgba(20,184,166,0.4), inset 0 1px 0 rgba(255,255,255,0.25)';
-                  }}
-                >
-                  <div
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                    style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)' }}
-                  />
-                  <Upload size={15} className="relative z-10" strokeWidth={2.5} />
-                  <span className="relative z-10">Upload</span>
-                </motion.button>
-
-                {/* Notifications */}
-                <div className="relative" onClick={e => e.stopPropagation()}>
-                  <motion.button
-                    whileTap={{ scale: 0.92 }}
-                    onClick={() => setNotifOpen(p => !p)}
-                    className="relative w-10 h-10 flex items-center justify-center rounded-xl text-slate-300 hover:text-white"
-                    style={{
-                      background: notifOpen ? 'rgba(20,184,166,0.2)' : 'rgba(255,255,255,0.06)',
-                      border: `1px solid ${notifOpen ? 'rgba(20,184,166,0.5)' : 'rgba(255,255,255,0.09)'}`,
-                      boxShadow: notifOpen ? '0 0 0 3px rgba(20,184,166,0.12)' : 'none',
-                      transition: 'all 0.25s ease',
-                    }}
-                    onMouseEnter={e => {
-                      if (!notifOpen) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)';
-                    }}
-                    onMouseLeave={e => {
-                      if (!notifOpen) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)';
-                    }}
-                  >
-                    <Bell size={17} />
-                    {notifCount > 0 && (
-                      <motion.span
-                        initial={{ scale: 0 }} animate={{ scale: 1 }}
-                        transition={{ type: 'spring', stiffness: 500, damping: 20 }}
-                        className="absolute -top-1 -right-1 min-w-[18px] h-[18px] text-white text-[10px] font-black rounded-full flex items-center justify-center px-1 border-2"
-                        style={{
-                          background: 'linear-gradient(135deg, #F87171, #DC2626)',
-                          borderColor: '#070A17',
-                          boxShadow: '0 0 10px rgba(239,68,68,0.6)',
-                        }}
-                      >
-                        {notifCount}
-                      </motion.span>
-                    )}
-                  </motion.button>
-
-                  {/* Notification dropdown */}
-                  <AnimatePresence>
-                    {notifOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                        transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                        className="absolute right-0 top-full mt-2.5 w-[400px] rounded-2xl overflow-hidden z-50"
-                        style={{
-                          background: '#0B0F26',
-                          boxShadow: '0 32px 80px -16px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.09), 0 0 60px rgba(20,184,166,0.12)',
-                        }}
-                      >
-                        <div
-                          className="px-5 py-4 flex items-center justify-between relative overflow-hidden"
-                          style={{
-                            background: 'linear-gradient(135deg, #0F1430 0%, #0B0F26 100%)',
-                            borderBottom: '1px solid rgba(255,255,255,0.07)',
-                          }}
-                        >
-                          <div
-                            className="absolute top-0 left-0 right-0 h-[1px]"
-                            style={{ background: 'linear-gradient(90deg, transparent, rgba(20,184,166,0.6), transparent)' }}
-                          />
-                          <div>
-                            <h3 className="font-bold text-white text-[15px] flex items-center gap-2">
-                              <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ background: 'rgba(20,184,166,0.18)' }}>
-                                <Bell size={12} className="text-teal-400" strokeWidth={2.5} />
-                              </div>
-                              Notifications
-                            </h3>
-                            <p className="text-slate-400 text-[12px] mt-0.5 ml-8 font-medium">{notifCount} unread</p>
-                          </div>
-                          <button
-                            onClick={() => setNotifCount(0)}
-                            className="flex items-center gap-1.5 text-[12px] font-bold text-teal-300 hover:text-white px-3 py-1.5 rounded-lg active:scale-95"
-                            style={{
-                              background: 'rgba(20,184,166,0.18)',
-                              border: '1px solid rgba(20,184,166,0.35)',
-                              transition: 'all 0.2s ease',
-                            }}
-                            onMouseEnter={e => {
-                              (e.currentTarget as HTMLElement).style.background = 'rgba(20,184,166,0.3)';
-                            }}
-                            onMouseLeave={e => {
-                              (e.currentTarget as HTMLElement).style.background = 'rgba(20,184,166,0.18)';
-                            }}
-                          >
-                            <Check size={11} strokeWidth={2.5} /> Mark all read
-                          </button>
-                        </div>
-
-                        <div className="max-h-[380px] overflow-y-auto">
-                          {NOTIFS.map((n, i) => (
-                            <motion.div
-                              key={n.id}
-                              initial={{ opacity: 0, x: -8 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: i * 0.04, duration: 0.2 }}
-                              className="flex gap-3 px-5 py-3.5 cursor-pointer relative"
-                              style={{
-                                background: n.unread ? 'rgba(20,184,166,0.05)' : 'transparent',
-                                borderBottom: '1px solid rgba(255,255,255,0.05)',
-                                transition: 'background 0.2s ease',
-                              }}
-                              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)'; }}
-                              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = n.unread ? 'rgba(20,184,166,0.05)' : 'transparent'; }}
-                            >
-                              {n.unread && (
-                                <div
-                                  className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-10 rounded-r-full"
-                                  style={{ background: n.color, boxShadow: `0 0 8px ${n.color}` }}
-                                />
-                              )}
-                              <div
-                                className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
-                                style={{
-                                  background: n.bg,
-                                  border: `1px solid ${n.color}30`,
-                                }}
-                              >
-                                <n.icon size={18} style={{ color: n.color }} strokeWidth={2.2} />
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
-                                  <p className={`text-[14px] leading-snug ${n.unread ? 'font-bold text-white' : 'font-semibold text-slate-300'}`}>
-                                    {n.title}
-                                  </p>
-                                  {n.unread && (
-                                    <div
-                                      className="w-2 h-2 rounded-full bg-teal-400 flex-shrink-0"
-                                      style={{ boxShadow: '0 0 8px #2DD4BF', animation: 'pulse-dot 2s ease-in-out infinite' }}
-                                    />
-                                  )}
-                                </div>
-                                <p className="text-[12px] text-slate-400 mt-1 leading-relaxed">{n.body}</p>
-                                <p className="text-[11px] text-slate-500 mt-1.5 font-semibold">{n.time}</p>
-                              </div>
-                            </motion.div>
-                          ))}
-                        </div>
-
-                        <div
-                          className="px-5 py-3 flex items-center justify-between"
-                          style={{
-                            background: 'rgba(5,7,18,0.7)',
-                            borderTop: '1px solid rgba(255,255,255,0.07)',
-                          }}
-                        >
-                          <button
-                            onClick={() => { navigate('/notifications'); setNotifOpen(false); }}
-                            className="text-[13px] text-teal-400 hover:text-teal-300 font-bold flex items-center gap-1 group"
-                            style={{ transition: 'color 0.2s' }}
-                          >
-                            View all
-                            <ChevronRight size={13} className="group-hover:translate-x-0.5" style={{ transition: 'transform 0.2s' }} />
-                          </button>
-                          <button
-                            onClick={() => { navigate('/settings'); setNotifOpen(false); }}
-                            className="text-[12px] text-slate-400 hover:text-slate-200 font-medium"
-                            style={{ transition: 'color 0.2s' }}
-                          >
-                            Notification settings
-                          </button>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                {/* Avatar */}
-                <motion.div
-                  whileHover={{ scale: 1.06 }}
-                  whileTap={{ scale: 0.94 }}
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-[12px] font-black border-2 cursor-pointer relative"
-                  style={{
-                    background: 'linear-gradient(135deg, #2DD4BF, #0F766E)',
-                    borderColor: 'rgba(255,255,255,0.18)',
-                    boxShadow: '0 0 18px rgba(20,184,166,0.45), inset 0 1px 0 rgba(255,255,255,0.25)',
-                  }}
-                >
-                  {initials}
-                  <div
-                    className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2"
-                    style={{ borderColor: '#070A17' }}
-                  />
-                </motion.div>
-              </div>
-            </div>
-          </header>
-          {/* ══════════ END TOPBAR ══════════ */}
-
-          {/* Page content */}
-          <main className="flex-1 overflow-y-auto relative">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-                className="min-h-full"
-              >
-                {children}
-              </motion.div>
-            </AnimatePresence>
-          </main>
-        </div>
-      </div>
-
-      {/* ════════════ SEARCH MODAL ════════════ */}
+      {/* Mobile overlay */}
       <AnimatePresence>
-        {searchOpen && (
+        {mobileOpen && (
           <>
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
-              className="fixed inset-0 z-50 backdrop-blur-md"
-              style={{ background: 'rgba(5,7,18,0.82)' }}
-              onClick={() => setSearchOpen(false)}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-black/65 z-40 lg:hidden backdrop-blur-md"
+              onClick={() => setMobileOpen(false)}
             />
             <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: -16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: -16 }}
-              transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed top-[10vh] left-1/2 -translate-x-1/2 w-full max-w-[560px] z-50 px-4"
+              initial={{ x: -SIDEBAR_WIDTH }} animate={{ x: 0 }} exit={{ x: -SIDEBAR_WIDTH }}
+              transition={{ type: 'spring', stiffness: 320, damping: 32 }}
+              className="fixed left-0 top-0 bottom-0 z-50 lg:hidden"
+              style={{ width: SIDEBAR_WIDTH }}
               onClick={e => e.stopPropagation()}
             >
-              <div
-                className="rounded-2xl overflow-hidden relative"
-                style={{
-                  background: 'linear-gradient(180deg, #0B0F26 0%, #070A17 100%)',
-                  border: '1px solid rgba(255,255,255,0.09)',
-                  boxShadow: '0 40px 80px -16px rgba(0,0,0,0.85), 0 0 0 1px rgba(20,184,166,0.18), 0 0 60px rgba(20,184,166,0.12)',
-                }}
-              >
-                <div
-                  className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none"
-                  style={{ background: 'linear-gradient(90deg, transparent, rgba(20,184,166,0.7), rgba(139,92,246,0.5), transparent)' }}
-                />
-
-                {/* Input */}
-                <div className="flex items-center gap-3 px-5 py-4 relative" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-                  <Search size={18} className="text-teal-400 flex-shrink-0" strokeWidth={2.3} />
-                  <input
-                    ref={searchRef}
-                    type="text"
-                    value={searchQuery}
-                    onChange={e => setSearchQuery(e.target.value)}
-                    placeholder="Search books, notes, authors…"
-                    className="flex-1 bg-transparent text-white placeholder-slate-500 text-[15px] font-medium focus:outline-none"
-                  />
-                  {searchQuery && (
-                    <button
-                      onClick={() => setSearchQuery('')}
-                      className="w-7 h-7 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-200 active:scale-90"
-                      style={{ transition: 'all 0.15s' }}
-                    >
-                      <X size={14} />
-                    </button>
-                  )}
-                  <button
-                    onClick={() => setSearchOpen(false)}
-                    className="w-7 h-7 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-100 active:scale-90"
-                    style={{
-                      background: 'rgba(255,255,255,0.06)',
-                      border: '1px solid rgba(255,255,255,0.09)',
-                      transition: 'all 0.15s',
-                    }}
-                  >
-                    <X size={12} />
-                  </button>
-                </div>
-
-                {/* Quick actions */}
-                <div className="p-3">
-                  <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-2.5 mb-2">Quick Actions</p>
-                  <div className="space-y-0.5">
-                    {QUICK_SEARCH.map((item, i) => (
-                      <motion.button
-                        key={item.to}
-                        initial={{ opacity: 0, x: -8 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.03, duration: 0.2 }}
-                        onClick={() => { navigate(item.to); setSearchOpen(false); }}
-                        className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left group active:scale-[0.99]"
-                        style={{ transition: 'background 0.2s' }}
-                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)'; }}
-                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
-                      >
-                        <div
-                          className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-                          style={{
-                            background: item.bg,
-                            border: `1px solid ${item.color}30`,
-                          }}
-                        >
-                          <item.icon size={17} style={{ color: item.color }} strokeWidth={2.2} />
-                        </div>
-                        <span className="text-[14px] font-semibold text-slate-300 group-hover:text-white" style={{ transition: 'color 0.2s' }}>
-                          {item.label}
-                        </span>
-                        <ArrowRight
-                          size={14}
-                          className="ml-auto text-slate-500 group-hover:text-teal-400 group-hover:translate-x-0.5"
-                          style={{ transition: 'all 0.2s' }}
-                        />
-                      </motion.button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Keyboard hints */}
-                <div
-                  className="px-5 py-3 flex items-center gap-4 text-[11px] text-slate-400 font-semibold"
-                  style={{
-                    borderTop: '1px solid rgba(255,255,255,0.05)',
-                    background: 'rgba(0,0,0,0.3)',
-                  }}
-                >
-                  {[['↵', 'Open'], ['↑↓', 'Navigate'], ['ESC', 'Close']].map(([key, label]) => (
-                    <span key={key} className="flex items-center gap-1.5">
-                      <kbd
-                        className="px-2 py-0.5 rounded font-mono text-slate-200"
-                        style={{
-                          background: 'rgba(255,255,255,0.07)',
-                          border: '1px solid rgba(255,255,255,0.12)',
-                        }}
-                      >
-                        {key}
-                      </kbd>
-                      {label}
-                    </span>
-                  ))}
-                </div>
-              </div>
+              {SidebarInner}
             </motion.div>
           </>
         )}
       </AnimatePresence>
+
+      {/* Main area */}
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        {/* ══════════ TOPBAR ══════════ */}
+        <header
+          className="flex-shrink-0 relative z-30"
+          style={{
+            background: 'linear-gradient(135deg, #070A17 0%, #0B0F26 50%, #070A17 100%)',
+            borderBottom: '1px solid rgba(255,255,255,0.07)',
+            boxShadow: '0 1px 0 rgba(255,255,255,0.04), 0 8px 28px -8px rgba(0,0,0,0.45)',
+          }}
+          onClick={() => setNotifOpen(false)}
+        >
+          {/* Top shimmer line */}
+          <div
+            className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none overflow-hidden"
+            style={{ background: 'linear-gradient(90deg, transparent, rgba(20,184,166,0.7), rgba(139,92,246,0.5), rgba(59,130,246,0.5), transparent)' }}
+          />
+
+          {/* Ambient glow */}
+          <div
+            className="absolute top-0 left-1/3 w-[500px] h-full pointer-events-none opacity-60"
+            style={{ background: 'radial-gradient(ellipse at center, rgba(20,184,166,0.1) 0%, transparent 60%)' }}
+          />
+
+          <div className="relative flex items-center gap-3 px-6 py-3.5">
+            {/* Mobile hamburger */}
+            <button
+              onClick={() => setMobileOpen(true)}
+              className="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl text-slate-300 hover:text-white active:scale-90"
+              style={{
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.09)',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              <Menu size={18} />
+            </button>
+
+            {/* Search bar */}
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium flex-1 max-w-md group active:scale-[0.99]"
+              style={{
+                background: 'rgba(255,255,255,0.05)',
+                border: '1px solid rgba(255,255,255,0.09)',
+                transition: 'all 0.25s ease',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
+                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(20,184,166,0.4)';
+                (e.currentTarget as HTMLElement).style.boxShadow = '0 0 0 3px rgba(20,184,166,0.1)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)';
+                (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.09)';
+                (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+              }}
+            >
+              <Search size={16} className="text-slate-400 group-hover:text-teal-400 flex-shrink-0" style={{ transition: 'color 0.25s' }} />
+              <span className="flex-1 text-left text-[14px] text-slate-400 group-hover:text-slate-200" style={{ transition: 'color 0.25s' }}>
+                Search books, notes, authors…
+              </span>
+              <kbd
+                className="hidden sm:flex items-center gap-0.5 text-[10px] px-2 py-1 rounded font-mono text-slate-300"
+                style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)' }}
+              >
+                <Command size={9} />K
+              </kbd>
+            </button>
+
+            {/* Right actions */}
+            <div className="flex items-center gap-2.5 ml-auto">
+              {/* Upload CTA */}
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate('/upload')}
+                className="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-[14px] font-bold text-white relative overflow-hidden group"
+                style={{
+                  background: 'linear-gradient(135deg, #2DD4BF 0%, #14B8A6 100%)',
+                  boxShadow: '0 4px 18px rgba(20,184,166,0.4), inset 0 1px 0 rgba(255,255,255,0.25)',
+                  transition: 'box-shadow 0.25s ease',
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 24px rgba(20,184,166,0.55), inset 0 1px 0 rgba(255,255,255,0.3)';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 18px rgba(20,184,166,0.4), inset 0 1px 0 rgba(255,255,255,0.25)';
+                }}
+              >
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)' }}
+                />
+                <Upload size={15} className="relative z-10" strokeWidth={2.5} />
+                <span className="relative z-10">Upload</span>
+              </motion.button>
+
+              {/* Notifications */}
+              <div className="relative" onClick={e => e.stopPropagation()}>
+                <motion.button
+                  whileTap={{ scale: 0.92 }}
+                  onClick={() => setNotifOpen(p => !p)}
+                  className="relative w-10 h-10 flex items-center justify-center rounded-xl text-slate-300 hover:text-white"
+                  style={{
+                    background: notifOpen ? 'rgba(20,184,166,0.2)' : 'rgba(255,255,255,0.06)',
+                    border: `1px solid ${notifOpen ? 'rgba(20,184,166,0.5)' : 'rgba(255,255,255,0.09)'}`,
+                    boxShadow: notifOpen ? '0 0 0 3px rgba(20,184,166,0.12)' : 'none',
+                    transition: 'all 0.25s ease',
+                  }}
+                  onMouseEnter={e => {
+                    if (!notifOpen) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.1)';
+                  }}
+                  onMouseLeave={e => {
+                    if (!notifOpen) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)';
+                  }}
+                >
+                  <Bell size={17} />
+                  {notifCount > 0 && (
+                    <motion.span
+                      initial={{ scale: 0 }} animate={{ scale: 1 }}
+                      transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+                      className="absolute -top-1 -right-1 min-w-[18px] h-[18px] text-white text-[10px] font-black rounded-full flex items-center justify-center px-1 border-2"
+                      style={{
+                        background: 'linear-gradient(135deg, #F87171, #DC2626)',
+                        borderColor: '#070A17',
+                        boxShadow: '0 0 10px rgba(239,68,68,0.6)',
+                      }}
+                    >
+                      {notifCount}
+                    </motion.span>
+                  )}
+                </motion.button>
+
+                {/* Notification dropdown */}
+                <AnimatePresence>
+                  {notifOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                      transition={{ duration: 0.2, ease: "easeInOut"0.22, 1, 0.36, 1] }}
+                  className="absolute right-0 top-full mt-2.5 w-[400px] rounded-2xl overflow-hidden z-50"
+                  style={{
+                    background: '#0B0F26',
+                    boxShadow: '0 32px 80px -16px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.09), 0 0 60px rgba(20,184,166,0.12)',
+                  }}
+                      >
+                  <div
+                    className="px-5 py-4 flex items-center justify-between relative overflow-hidden"
+                    style={{
+                      background: 'linear-gradient(135deg, #0F1430 0%, #0B0F26 100%)',
+                      borderBottom: '1px solid rgba(255,255,255,0.07)',
+                    }}
+                  >
+                    <div
+                      className="absolute top-0 left-0 right-0 h-[1px]"
+                      style={{ background: 'linear-gradient(90deg, transparent, rgba(20,184,166,0.6), transparent)' }}
+                    />
+                    <div>
+                      <h3 className="font-bold text-white text-[15px] flex items-center gap-2">
+                        <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ background: 'rgba(20,184,166,0.18)' }}>
+                          <Bell size={12} className="text-teal-400" strokeWidth={2.5} />
+                        </div>
+                        Notifications
+                      </h3>
+                      <p className="text-slate-400 text-[12px] mt-0.5 ml-8 font-medium">{notifCount} unread</p>
+                    </div>
+                    <button
+                      onClick={() => setNotifCount(0)}
+                      className="flex items-center gap-1.5 text-[12px] font-bold text-teal-300 hover:text-white px-3 py-1.5 rounded-lg active:scale-95"
+                      style={{
+                        background: 'rgba(20,184,166,0.18)',
+                        border: '1px solid rgba(20,184,166,0.35)',
+                        transition: 'all 0.2s ease',
+                      }}
+                      onMouseEnter={e => {
+                        (e.currentTarget as HTMLElement).style.background = 'rgba(20,184,166,0.3)';
+                      }}
+                      onMouseLeave={e => {
+                        (e.currentTarget as HTMLElement).style.background = 'rgba(20,184,166,0.18)';
+                      }}
+                    >
+                      <Check size={11} strokeWidth={2.5} /> Mark all read
+                    </button>
+                  </div>
+
+                  <div className="max-h-[380px] overflow-y-auto">
+                    {NOTIFS.map((n, i) => (
+                      <motion.div
+                        key={n.id}
+                        initial={{ opacity: 0, x: -8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.04, duration: 0.2 }}
+                        className="flex gap-3 px-5 py-3.5 cursor-pointer relative"
+                        style={{
+                          background: n.unread ? 'rgba(20,184,166,0.05)' : 'transparent',
+                          borderBottom: '1px solid rgba(255,255,255,0.05)',
+                          transition: 'background 0.2s ease',
+                        }}
+                        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)'; }}
+                        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = n.unread ? 'rgba(20,184,166,0.05)' : 'transparent'; }}
+                      >
+                        {n.unread && (
+                          <div
+                            className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-10 rounded-r-full"
+                            style={{ background: n.color, boxShadow: `0 0 8px ${n.color}` }}
+                          />
+                        )}
+                        <div
+                          className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                          style={{
+                            background: n.bg,
+                            border: `1px solid ${n.color}30`,
+                          }}
+                        >
+                          <n.icon size={18} style={{ color: n.color }} strokeWidth={2.2} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className={`text-[14px] leading-snug ${n.unread ? 'font-bold text-white' : 'font-semibold text-slate-300'}`}>
+                              {n.title}
+                            </p>
+                            {n.unread && (
+                              <div
+                                className="w-2 h-2 rounded-full bg-teal-400 flex-shrink-0"
+                                style={{ boxShadow: '0 0 8px #2DD4BF', animation: 'pulse-dot 2s ease-in-out infinite' }}
+                              />
+                            )}
+                          </div>
+                          <p className="text-[12px] text-slate-400 mt-1 leading-relaxed">{n.body}</p>
+                          <p className="text-[11px] text-slate-500 mt-1.5 font-semibold">{n.time}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  <div
+                    className="px-5 py-3 flex items-center justify-between"
+                    style={{
+                      background: 'rgba(5,7,18,0.7)',
+                      borderTop: '1px solid rgba(255,255,255,0.07)',
+                    }}
+                  >
+                    <button
+                      onClick={() => { navigate('/notifications'); setNotifOpen(false); }}
+                      className="text-[13px] text-teal-400 hover:text-teal-300 font-bold flex items-center gap-1 group"
+                      style={{ transition: 'color 0.2s' }}
+                    >
+                      View all
+                      <ChevronRight size={13} className="group-hover:translate-x-0.5" style={{ transition: 'transform 0.2s' }} />
+                    </button>
+                    <button
+                      onClick={() => { navigate('/settings'); setNotifOpen(false); }}
+                      className="text-[12px] text-slate-400 hover:text-slate-200 font-medium"
+                      style={{ transition: 'color 0.2s' }}
+                    >
+                      Notification settings
+                    </button>
+                  </div>
+                </motion.div>
+                    )}
+              </AnimatePresence>
+            </div>
+
+            {/* Avatar */}
+            <motion.div
+              whileHover={{ scale: 1.06 }}
+              whileTap={{ scale: 0.94 }}
+              className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-[12px] font-black border-2 cursor-pointer relative"
+              style={{
+                background: 'linear-gradient(135deg, #2DD4BF, #0F766E)',
+                borderColor: 'rgba(255,255,255,0.18)',
+                boxShadow: '0 0 18px rgba(20,184,166,0.45), inset 0 1px 0 rgba(255,255,255,0.25)',
+              }}
+            >
+              {initials}
+              <div
+                className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-400 border-2"
+                style={{ borderColor: '#070A17' }}
+              />
+            </motion.div>
+          </div>
+      </div>
+    </header >
+      {/* ══════════ END TOPBAR ══════════ */ }
+
+  {/* Page content */ }
+  <main className="flex-1 overflow-y-auto relative">
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -8 }}
+        transition={{ duration: 0.22, ease: "easeInOut"0.22, 1, 0.36, 1] }}
+      className="min-h-full"
+              >
+      {children}
+    </motion.div>
+  </AnimatePresence>
+          </main >
+        </div >
+      </div >
+
+    {/* ════════════ SEARCH MODAL ════════════ */ }
+    <AnimatePresence>
+  {
+    searchOpen && (
+      <>
+        <motion.div
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          transition={{ duration: 0.18 }}
+          className="fixed inset-0 z-50 backdrop-blur-md"
+          style={{ background: 'rgba(5,7,18,0.82)' }}
+          onClick={() => setSearchOpen(false)}
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96, y: -16 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.96, y: -16 }}
+          transition={{ duration: 0.2, ease: "easeInOut"0.22, 1, 0.36, 1] }}
+        className="fixed top-[10vh] left-1/2 -translate-x-1/2 w-full max-w-[560px] z-50 px-4"
+        onClick={e => e.stopPropagation()}
+            >
+        <div
+          className="rounded-2xl overflow-hidden relative"
+          style={{
+            background: 'linear-gradient(180deg, #0B0F26 0%, #070A17 100%)',
+            border: '1px solid rgba(255,255,255,0.09)',
+            boxShadow: '0 40px 80px -16px rgba(0,0,0,0.85), 0 0 0 1px rgba(20,184,166,0.18), 0 0 60px rgba(20,184,166,0.12)',
+          }}
+        >
+          <div
+            className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none"
+            style={{ background: 'linear-gradient(90deg, transparent, rgba(20,184,166,0.7), rgba(139,92,246,0.5), transparent)' }}
+          />
+
+          {/* Input */}
+          <div className="flex items-center gap-3 px-5 py-4 relative" style={{ borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
+            <Search size={18} className="text-teal-400 flex-shrink-0" strokeWidth={2.3} />
+            <input
+              ref={searchRef}
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Search books, notes, authors…"
+              className="flex-1 bg-transparent text-white placeholder-slate-500 text-[15px] font-medium focus:outline-none"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery('')}
+                className="w-7 h-7 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-200 active:scale-90"
+                style={{ transition: 'all 0.15s' }}
+              >
+                <X size={14} />
+              </button>
+            )}
+            <button
+              onClick={() => setSearchOpen(false)}
+              className="w-7 h-7 rounded-md flex items-center justify-center text-slate-400 hover:text-slate-100 active:scale-90"
+              style={{
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.09)',
+                transition: 'all 0.15s',
+              }}
+            >
+              <X size={12} />
+            </button>
+          </div>
+
+          {/* Quick actions */}
+          <div className="p-3">
+            <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-2.5 mb-2">Quick Actions</p>
+            <div className="space-y-0.5">
+              {QUICK_SEARCH.map((item, i) => (
+                <motion.button
+                  key={item.to}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.03, duration: 0.2 }}
+                  onClick={() => { navigate(item.to); setSearchOpen(false); }}
+                  className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left group active:scale-[0.99]"
+                  style={{ transition: 'background 0.2s' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)'; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+                >
+                  <div
+                    className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{
+                      background: item.bg,
+                      border: `1px solid ${item.color}30`,
+                    }}
+                  >
+                    <item.icon size={17} style={{ color: item.color }} strokeWidth={2.2} />
+                  </div>
+                  <span className="text-[14px] font-semibold text-slate-300 group-hover:text-white" style={{ transition: 'color 0.2s' }}>
+                    {item.label}
+                  </span>
+                  <ArrowRight
+                    size={14}
+                    className="ml-auto text-slate-500 group-hover:text-teal-400 group-hover:translate-x-0.5"
+                    style={{ transition: 'all 0.2s' }}
+                  />
+                </motion.button>
+              ))}
+            </div>
+          </div>
+
+          {/* Keyboard hints */}
+          <div
+            className="px-5 py-3 flex items-center gap-4 text-[11px] text-slate-400 font-semibold"
+            style={{
+              borderTop: '1px solid rgba(255,255,255,0.05)',
+              background: 'rgba(0,0,0,0.3)',
+            }}
+          >
+            {[['↵', 'Open'], ['↑↓', 'Navigate'], ['ESC', 'Close']].map(([key, label]) => (
+              <span key={key} className="flex items-center gap-1.5">
+                <kbd
+                  className="px-2 py-0.5 rounded font-mono text-slate-200"
+                  style={{
+                    background: 'rgba(255,255,255,0.07)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                  }}
+                >
+                  {key}
+                </kbd>
+                {label}
+              </span>
+            ))}
+          </div>
+        </div>
+      </motion.div >
+          </>
+        )
+  }
+      </AnimatePresence >
     </>
   );
 }

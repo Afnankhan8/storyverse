@@ -14,31 +14,31 @@ import AppShell from '../components/AppShell';
 interface Props { user?: any; onLogout?: () => void; }
 
 const TRENDING = [
-  { id: 't1', title: 'The Midnight Algorithm', author: 'R. Nakamura', genre: 'Sci-Fi',   views: 12400, likes: 892, rating: 4.8, reviews: 127, gradient: 'from-sky-500 via-blue-600 to-indigo-700' },
-  { id: 't2', title: 'Echoes of Ember',         author: 'D. Petrov',   genre: 'Fantasy',  views: 9800,  likes: 743, rating: 4.6, reviews: 89,  gradient: 'from-orange-400 via-rose-500 to-pink-600' },
-  { id: 't3', title: 'Silent Code',             author: 'A. Hassan',  genre: 'Thriller', views: 8200,  likes: 601, rating: 4.7, reviews: 74,  gradient: 'from-violet-500 via-purple-600 to-indigo-600' },
-  { id: 't4', title: 'Urban Legends Vol.2',     author: 'M. Torres',  genre: 'Horror',   views: 6700,  likes: 490, rating: 4.5, reviews: 56,  gradient: 'from-slate-700 via-slate-800 to-gray-900' },
+  { id: 't1', title: 'The Midnight Algorithm', author: 'R. Nakamura', genre: 'Sci-Fi', views: 12400, likes: 892, rating: 4.8, reviews: 127, gradient: 'from-sky-500 via-blue-600 to-indigo-700' },
+  { id: 't2', title: 'Echoes of Ember', author: 'D. Petrov', genre: 'Fantasy', views: 9800, likes: 743, rating: 4.6, reviews: 89, gradient: 'from-orange-400 via-rose-500 to-pink-600' },
+  { id: 't3', title: 'Silent Code', author: 'A. Hassan', genre: 'Thriller', views: 8200, likes: 601, rating: 4.7, reviews: 74, gradient: 'from-violet-500 via-purple-600 to-indigo-600' },
+  { id: 't4', title: 'Urban Legends Vol.2', author: 'M. Torres', genre: 'Horror', views: 6700, likes: 490, rating: 4.5, reviews: 56, gradient: 'from-slate-700 via-slate-800 to-gray-900' },
 ];
 
 const ACTIVE_USERS = [
-  { name: 'Sofia Lin',    handle: 'sofiawrites', avatar: 'S', books: 19, followers: 3400, gradient: 'from-violet-500 to-purple-600', specialty: 'Fantasy & Sci-Fi', verified: true },
-  { name: 'Aria Chen',   handle: 'aria_chen',   avatar: 'A', books: 12, followers: 1240, gradient: 'from-pink-500 to-rose-500',     specialty: 'Romance & Drama', verified: true },
-  { name: 'Marcus Webb', handle: 'marcuswebb',  avatar: 'M', books: 8,  followers: 890,  gradient: 'from-emerald-500 to-cyan-500',  specialty: 'Thriller',         verified: false },
-  { name: 'James O.',    handle: 'james_o',     avatar: 'J', books: 6,  followers: 540,  gradient: 'from-amber-500 to-orange-500',  specialty: 'Non-Fiction',      verified: false },
+  { name: 'Sofia Lin', handle: 'sofiawrites', avatar: 'S', books: 19, followers: 3400, gradient: 'from-violet-500 to-purple-600', specialty: 'Fantasy & Sci-Fi', verified: true },
+  { name: 'Aria Chen', handle: 'aria_chen', avatar: 'A', books: 12, followers: 1240, gradient: 'from-pink-500 to-rose-500', specialty: 'Romance & Drama', verified: true },
+  { name: 'Marcus Webb', handle: 'marcuswebb', avatar: 'M', books: 8, followers: 890, gradient: 'from-emerald-500 to-cyan-500', specialty: 'Thriller', verified: false },
+  { name: 'James O.', handle: 'james_o', avatar: 'J', books: 6, followers: 540, gradient: 'from-amber-500 to-orange-500', specialty: 'Non-Fiction', verified: false },
 ];
 
 const DISCUSSIONS = [
-  { id: 'd1', title: 'Best world-building techniques for fantasy novels?', author: 'Aria Chen',   authorGrad: 'from-pink-500 to-rose-500',     replies: 24, likes: 67, time: '1h ago', pinned: true, tag: 'Craft' },
-  { id: 'd2', title: 'How do you push through writer\'s block?',           author: 'Marcus Webb', authorGrad: 'from-emerald-500 to-cyan-500',  replies: 18, likes: 43, time: '3h ago', pinned: false, tag: 'Tips' },
-  { id: 'd3', title: 'Your favorite plotting tools and methods?',           author: 'Sofia Lin',   authorGrad: 'from-violet-500 to-purple-600', replies: 31, likes: 89, time: '6h ago', pinned: false, tag: 'Tools' },
-  { id: 'd4', title: 'Tips for writing dialogue that feels real',           author: 'James O.',    authorGrad: 'from-amber-500 to-orange-500',   replies: 12, likes: 28, time: '1d ago', pinned: false, tag: 'Craft' },
-  { id: 'd5', title: 'How do you structure your daily writing routine?',    author: 'Aria Chen',   authorGrad: 'from-pink-500 to-rose-500',     replies: 9,  likes: 41, time: '2d ago', pinned: false, tag: 'Productivity' },
+  { id: 'd1', title: 'Best world-building techniques for fantasy novels?', author: 'Aria Chen', authorGrad: 'from-pink-500 to-rose-500', replies: 24, likes: 67, time: '1h ago', pinned: true, tag: 'Craft' },
+  { id: 'd2', title: 'How do you push through writer\'s block?', author: 'Marcus Webb', authorGrad: 'from-emerald-500 to-cyan-500', replies: 18, likes: 43, time: '3h ago', pinned: false, tag: 'Tips' },
+  { id: 'd3', title: 'Your favorite plotting tools and methods?', author: 'Sofia Lin', authorGrad: 'from-violet-500 to-purple-600', replies: 31, likes: 89, time: '6h ago', pinned: false, tag: 'Tools' },
+  { id: 'd4', title: 'Tips for writing dialogue that feels real', author: 'James O.', authorGrad: 'from-amber-500 to-orange-500', replies: 12, likes: 28, time: '1d ago', pinned: false, tag: 'Craft' },
+  { id: 'd5', title: 'How do you structure your daily writing routine?', author: 'Aria Chen', authorGrad: 'from-pink-500 to-rose-500', replies: 9, likes: 41, time: '2d ago', pinned: false, tag: 'Productivity' },
 ];
 
 function Stars({ value }: { value: number }) {
   return (
     <div className="flex gap-0.5">
-      {[1,2,3,4,5].map(i => (
+      {[1, 2, 3, 4, 5].map(i => (
         <Star key={i} size={11} className={i <= Math.round(value) ? 'fill-amber-400 text-amber-400' : 'text-slate-200'} />
       ))}
     </div>
@@ -53,7 +53,7 @@ const TAG_COLORS: Record<string, string> = {
 };
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
-const fadeUp = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.16,1,0.3,1] } } };
+const fadeUp = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeInOut"0.16, 1, 0.3, 1] } } };
 
 export default function Community({ user, onLogout }: Props) {
   const [search, setSearch] = useState('');
@@ -90,10 +90,10 @@ export default function Community({ user, onLogout }: Props) {
         <motion.div variants={stagger} initial="hidden" animate="show"
           className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
           {[
-            { icon: BookOpen,      label: 'Books Published', value: '12,400+', gradient: 'from-blue-500 to-indigo-600',   bg: 'bg-blue-50',    text: 'text-blue-600',   change: '+142 this week' },
-            { icon: Users,         label: 'Active Authors',  value: '3,200+',  gradient: 'from-violet-500 to-purple-600', bg: 'bg-violet-50',  text: 'text-violet-600', change: '+38 this week' },
-            { icon: MessageSquare, label: 'Discussions',     value: '8,900+',  gradient: 'from-pink-500 to-rose-500',     bg: 'bg-pink-50',    text: 'text-pink-600',   change: '+210 this week' },
-            { icon: Star,          label: 'Reviews',         value: '45,000+', gradient: 'from-amber-400 to-orange-500',  bg: 'bg-amber-50',   text: 'text-amber-600',  change: '+1,200 this week' },
+            { icon: BookOpen, label: 'Books Published', value: '12,400+', gradient: 'from-blue-500 to-indigo-600', bg: 'bg-blue-50', text: 'text-blue-600', change: '+142 this week' },
+            { icon: Users, label: 'Active Authors', value: '3,200+', gradient: 'from-violet-500 to-purple-600', bg: 'bg-violet-50', text: 'text-violet-600', change: '+38 this week' },
+            { icon: MessageSquare, label: 'Discussions', value: '8,900+', gradient: 'from-pink-500 to-rose-500', bg: 'bg-pink-50', text: 'text-pink-600', change: '+210 this week' },
+            { icon: Star, label: 'Reviews', value: '45,000+', gradient: 'from-amber-400 to-orange-500', bg: 'bg-amber-50', text: 'text-amber-600', change: '+1,200 this week' },
           ].map((stat, i) => (
             <motion.div key={stat.label} variants={fadeUp}
               className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 p-4 lg:p-5">
@@ -113,9 +113,9 @@ export default function Community({ user, onLogout }: Props) {
         <div className="flex items-center justify-between mb-6">
           <div className="flex gap-1 bg-slate-100 rounded-xl p-1">
             {([
-              { id: 'trending',    icon: Flame,          label: 'Trending' },
-              { id: 'discussions', icon: MessageSquare,  label: 'Discussions' },
-              { id: 'authors',     icon: Users,          label: 'Authors' },
+              { id: 'trending', icon: Flame, label: 'Trending' },
+              { id: 'discussions', icon: MessageSquare, label: 'Discussions' },
+              { id: 'authors', icon: Users, label: 'Authors' },
             ] as const).map(tab => (
               <button key={tab.id} onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab === tab.id ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>
