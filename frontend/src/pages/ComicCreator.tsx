@@ -15,7 +15,8 @@ import { collection, query, orderBy, getDocs, addDoc, deleteDoc, doc } from 'fir
 import AppShell from '../components/AppShell';
 import { theme, ComicCard, FlipSpread } from '../components/Theme';
 
-const API_URL = 'http://127.0.0.1:8000/api/story';
+// const API_URL = 'http://127.0.0.1:8000/api/story';
+const API_URL = 'https://comixnova-api.onrender.com/api/story';
 
 
 
