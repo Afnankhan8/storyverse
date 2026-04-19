@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { MessageCircle, Star, Send, Trash2, Loader2 } from 'lucide-react';
 
-const API = 'http://localhost:8000';
+// const API = 'http://localhost:8000';
+const API_URL = 'https://comixnova-api.onrender.com/api/story';
 
 interface Comment {
   id: string;
@@ -49,7 +50,7 @@ export default function CommentsSection({ bookId, currentUserId, currentUsername
   useEffect(() => {
     if (!open) return;
     setLoading(true);
-    axios.get(`${API}/api/social/comments/${bookId}`)
+    axios.get(`${API_URL}/api/social/comments/${bookId}`)
       .then(r => setComments(r.data.comments || []))
       .catch(() => setComments([]))
       .finally(() => setLoading(false));
@@ -59,7 +60,7 @@ export default function CommentsSection({ bookId, currentUserId, currentUsername
     if (!text.trim() || !currentUsername || submitting) return;
     setSubmitting(true);
     try {
-      await axios.post(`${API}/api/social/comment`, {
+      await axios.post(`${API_URL}/api/social/comment`, {
         bookId, userId: currentUserId || 'anonymous',
         username: currentUsername, text: text.trim(),
         rating: rating || null
@@ -78,7 +79,7 @@ export default function CommentsSection({ bookId, currentUserId, currentUsername
 
   const deleteComment = async (id: string) => {
     if (!currentUserId) return;
-    await axios.delete(`${API}/api/social/comment/${id}`, { params: { userId: currentUserId } }).catch(() => {});
+    await axios.delete(`${API_URL}/api/social/comment/${id}`, { params: { userId: currentUserId } }).catch(() => {});
     setComments(c => c.filter(x => x.id !== id));
   };
 
