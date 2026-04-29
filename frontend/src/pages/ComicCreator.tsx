@@ -10,7 +10,7 @@ import {
   FileText, Loader2, ChevronDown,
   Trash2, Eye, Printer, Volume2, StopCircle
 } from 'lucide-react';
-import { auth, db } from '../firebase';
+import { auth, db } from '../firebase.ts';
 import { collection, query, orderBy, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore';
 import AppShell from '../components/AppShell';
 import { theme, ComicCard, FlipSpread } from '../components/Theme';
@@ -260,7 +260,7 @@ export default function ComicCreator({ user, onLogout }: ComicCreatorProps) {
   };
 
   const nextPage = () => { if (currentPage < (comic?.pages?.length || 0) - 1) setCurrentPage(p => p + 1); };
-  const prevPage = () => { if (currentPage > 0) setCurrentPage(p => p - 1); };
+  const prevPage = () => { if (currentPage > 1) setCurrentPage(p => p - 1); };
   useEffect(() => { const handler = (e: KeyboardEvent) => { if (viewMode === 'flipbook') { if (e.key === 'ArrowRight') nextPage(); if (e.key === 'ArrowLeft') prevPage(); } }; window.addEventListener('keydown', handler); return () => window.removeEventListener('keydown', handler); }, [viewMode, currentPage, comic]);
 
   const handleDownloadText = () => {

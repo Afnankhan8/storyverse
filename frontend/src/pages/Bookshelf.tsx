@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BookOpen, Trash2, Clock, Sparkles, BookMarked, Search, Grid3X3, List } from 'lucide-react';
-import { auth } from '../firebase';
+import { auth } from '../firebase.ts';
 import AppShell from '../components/AppShell';
 
 const API = 'http://localhost:8000';
@@ -29,7 +29,7 @@ export default function Bookshelf({ user, onLogout }: { user?: any; onLogout?: (
 
   const remove = async (bookId: string) => {
     setSaved(s => s.filter(b => b.bookId !== bookId));
-    await axios.delete(`${API}/api/social/bookshelf/remove`, { params: { userId, bookId } }).catch(() => {});
+    await axios.delete(`${API}/api/social/bookshelf/remove`, { params: { userId, bookId } }).catch(() => { });
   };
 
   const filtered = saved.filter(item => {
@@ -111,8 +111,8 @@ export default function Bookshelf({ user, onLogout }: { user?: any; onLogout?: (
                         {item.coverImage
                           ? <img src={item.coverImage} alt={item.bookTitle} className="w-full h-full object-cover" />
                           : <div className="w-full h-full bg-gradient-to-br from-blue-100 to-violet-100 flex items-center justify-center">
-                              <BookOpen size={28} className="text-blue-300" />
-                            </div>
+                            <BookOpen size={28} className="text-blue-300" />
+                          </div>
                         }
                         <div className="absolute inset-0 bg-slate-900/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
                           <span className="bg-white text-slate-900 text-xs font-bold px-3 py-1.5 rounded-xl flex items-center gap-1.5">

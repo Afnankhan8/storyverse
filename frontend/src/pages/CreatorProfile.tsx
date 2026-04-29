@@ -6,7 +6,7 @@ import {
   BookOpen, Eye, Heart, Users, UserPlus, UserCheck,
   Star, Globe, Sparkles, ArrowRight, Loader2
 } from 'lucide-react';
-import { auth } from '../firebase';
+import { auth } from '../firebase.ts';
 import AppShell from '../components/AppShell';
 
 const API = 'http://localhost:8000';

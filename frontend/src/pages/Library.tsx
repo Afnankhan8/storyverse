@@ -1,7 +1,8 @@
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { db } from '../firebase.ts';
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import {
   BookOpen, Search, Grid3X3, List, Star, Eye, Heart,
   MoreVertical, Trash2, Archive, BookMarked, Upload,
@@ -12,7 +13,7 @@ import {
 } from 'lucide-react';
 import AppShell from '../components/AppShell';
 
-const API = 'http://localhost:8000';
+// const API = 'http://localhost:8000';
 
 /* ═══════════════════════════════════════════════════════════
    TYPES & INTERFACES
@@ -88,108 +89,40 @@ export default function Library({ user, onLogout }: Props) {
 
   // Fetch books
   useEffect(() => {
-    if (!user?.email) {
-      // Mock data fallback
-      setBooks(generateMockBooks());
-      setLoading(false);
-      return;
-    }
+    const fetchBooks = async () => {
+      try {
+        setLoading(true);
 
-    axios
-      .get(`${API}/api/hub/books?authorId=${encodeURIComponent(user.email)}`, {
-        timeout: 5000,
-      })
-      .then((res) => {
-        const data = Array.isArray(res.data) ? res.data : [];
-        setBooks(data.length > 0 ? data : generateMockBooks());
-      })
-      .catch(() => setBooks(generateMockBooks()))
-      .finally(() => setLoading(false));
-  }, [user]);
+        const q = query(
+          collection(db, "books"),
+          orderBy("createdAt", "desc")
+        );
 
-  // Mock book generator
-  function generateMockBooks(): Book[] {
-    return [
-      {
-        id: '1',
-        title: 'The Lost Chronicles',
-        author: 'You',
-        genre: 'Fantasy',
-        coverImage: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?w=400&h=600&fit=crop',
-        views: 12400,
-        likes: 843,
-        avgRating: 4.8,
-        progress: 78,
-        status: 'reading',
-        pages: 324,
-      },
-      {
-        id: '2',
-        title: 'Neon Shadows',
-        author: 'You',
-        genre: 'Sci-Fi',
-        coverImage: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=400&h=600&fit=crop',
-        views: 9100,
-        likes: 621,
-        avgRating: 4.6,
-        progress: 100,
-        status: 'completed',
-        pages: 286,
-      },
-      {
-        id: '3',
-        title: 'Beyond the Stars',
-        author: 'You',
-        genre: 'Romance',
-        coverImage: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=400&h=600&fit=crop',
-        views: 7250,
-        likes: 512,
-        avgRating: 4.7,
-        progress: 45,
-        status: 'reading',
-        pages: 412,
-      },
-      {
-        id: '4',
-        title: 'Midnight Whispers',
-        author: 'You',
-        genre: 'Mystery',
-        coverImage: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&h=600&fit=crop',
-        views: 5800,
-        likes: 430,
-        avgRating: 4.5,
-        progress: 0,
-        status: 'unread',
-        pages: 298,
-      },
-      {
-        id: '5',
-        title: 'The Hollow Earth',
-        author: 'You',
-        genre: 'Adventure',
-        coverImage: 'https://images.unsplash.com/photo-1531901599143-df5010ab9438?w=400&h=600&fit=crop',
-        views: 4200,
-        likes: 310,
-        avgRating: 4.4,
-        progress: 23,
-        status: 'paused',
-        pages: 356,
-      },
-      {
-        id: '6',
-        title: 'Ocean Symphony',
-        author: 'You',
-        genre: 'Fiction',
-        coverImage: 'https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=400&h=600&fit=crop',
-        views: 3800,
-        likes: 280,
-        avgRating: 4.3,
-        progress: 0,
-        status: 'unread',
-        pages: 234,
-      },
-    ];
-  }
+        const snapshot = await getDocs(q);
+
+        const data = snapshot.docs.map((doc) => {
+          const item: any = doc.data();
+
+          return {
+            id: doc.id,
+            ...item,
+            coverImage: item.coverUrl || "",
+            genre: item.category || item.genre || "General"
+          };
+        });
+
+        setBooks(data as any);
+      } catch (error) {
+        console.error(error);
+        setBooks([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
 
   // Filtered & sorted books
   const filtered = useMemo(() => {

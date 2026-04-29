@@ -758,7 +758,7 @@ export function ComicCard({ panel, idx, showCaption = true, onClick }: ComicCard
       </div>
 
       {/* Caption Area */}
-      {showCaption && (panel?.caption || panel?.scene_description) && (
+      {showCaption && (panel?.caption || panel?.scene_description || (panel as any).action) && (
         <div
           style={{
             padding: '0.875rem 1rem',
@@ -770,7 +770,7 @@ export function ComicCard({ panel, idx, showCaption = true, onClick }: ComicCard
             className="body-sm font-body"
             style={{ color: theme.colors.text.secondary, lineHeight: 1.55, margin: 0 }}
           >
-            {panel.caption || panel.scene_description}
+            {panel.caption || panel.scene_description || (panel as any).action}
           </p>
         </div>
       )}
@@ -846,7 +846,7 @@ export function FlipSpread({ panel, pageNum, totalPages, storyTitle = 'COMIXNOVA
         >
           <div className="speech-bubble" style={{ maxWidth: '90%', margin: '0 auto', textAlign: 'center' }}>
             <p className="body-sm" style={{ margin: 0, color: theme.colors.text.primary, fontWeight: 500 }}>
-              {panel.caption || panel.scene_description}
+              {panel.caption || panel.scene_description || (panel as any).action}
             </p>
           </div>
         </div>

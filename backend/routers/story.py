@@ -379,7 +379,7 @@ def _caption(draw, action: str, accent: str):
     avail_w = CW - 80    # 944 px wide — very generous
     avail_h = CAPH - 40  # 144 px tall
     fnt, lines, lh, _ = _fit(draw, action,
-                               start=46, max_w=avail_w, max_h=avail_h)
+                                start=46, max_w=avail_w, max_h=avail_h)
 
     # vertical centre
     total_h = len(lines) * (lh + 12) - 12

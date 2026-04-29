@@ -194,58 +194,107 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
   ] as const;
 
   return (
-    <div className="flex h-screen bg-slate-50 font-sans text-slate-900 overflow-hidden">
-      {/* Sidebar */}
-      <div className="w-64 bg-white border-r border-slate-200 flex flex-col flex-shrink-0 z-10 shadow-sm">
-        <div className="p-6 border-b border-slate-100 flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <Shield className="text-white w-5 h-5" />
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap');
+        .admin-root, .admin-root * { font-family: 'DM Sans', sans-serif; box-sizing: border-box; }
+        .admin-root ::-webkit-scrollbar { width: 5px; height: 5px; }
+        .admin-root ::-webkit-scrollbar-track { background: transparent; }
+        .admin-root ::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.3); border-radius: 99px; }
+        .admin-root ::-webkit-scrollbar-thumb:hover { background: rgba(59,130,246,0.5); }
+      `}</style>
+      <div className="admin-root flex h-screen bg-[#F8FAFC] text-slate-900 overflow-hidden">
+        {/* Sidebar */}
+        <div 
+          className="w-[296px] flex flex-col flex-shrink-0 z-10 relative overflow-hidden"
+          style={{
+            background: 'linear-gradient(180deg, #070A17 0%, #0B0F26 50%, #070A17 100%)',
+            borderRight: '1px solid rgba(255,255,255,0.07)',
+          }}
+        >
+          <div
+            className="absolute top-0 left-0 w-full h-64 pointer-events-none"
+            style={{ background: 'radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.15) 0%, transparent 70%)' }}
+          />
+          <div className="p-6 pt-8 flex items-center gap-3 relative z-10">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0"
+                 style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #1D4ED8 100%)', boxShadow: '0 0 28px rgba(59,130,246,0.55), inset 0 1px 0 rgba(255,255,255,0.25)' }}>
+              <Shield className="text-white w-5 h-5" strokeWidth={2.5} />
+            </div>
+            <div>
+              <h1 className="font-black text-[22px] tracking-tight leading-none" 
+                  style={{ fontFamily: "'Bricolage Grotesque', sans-serif", background: 'linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-0.02em' }}>
+                AdminPro
+              </h1>
+              <p className="text-[10px] font-black text-blue-400 uppercase tracking-widest mt-0.5">Superuser</p>
+            </div>
           </div>
-          <div>
-            <h1 className="font-black text-slate-900 leading-tight" style={{ fontFamily: "'Syne', sans-serif" }}>Admin<span className="text-blue-600">Pro</span></h1>
-            <p className="text-[10px] uppercase tracking-wider font-bold text-slate-400">Superuser Portal</p>
-          </div>
-        </div>
 
-        <div className="flex-1 py-6 px-4 space-y-1 overflow-y-auto">
-          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 px-2">Menu</div>
-          {tabs.map(tab => {
-            const isActive = activeTab === tab.id;
-            return (
-              <button key={tab.id} onClick={() => setActiveTab(tab.id as Tab)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all ${isActive ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-                  }`}>
-                <tab.icon size={18} className={isActive ? 'text-blue-600' : 'text-slate-400'} />
-                {tab.label}
-                {(tab as any).badge !== undefined && (tab as any).badge > 0 && (
-                  <span className={`ml-auto text-[10px] font-black px-2 py-0.5 rounded-full ${isActive ? 'bg-blue-200 text-blue-800' : 'bg-red-100 text-red-600'}`}>
-                    {(tab as any).badge}
+          <div className="flex-1 py-4 px-3 space-y-1 overflow-y-auto relative z-10">
+            <div className="text-[11px] font-black text-slate-500 uppercase tracking-[0.18em] px-3 mb-3 mt-2">Menu</div>
+            {tabs.map(tab => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button key={tab.id} onClick={() => setActiveTab(tab.id as Tab)}
+                  className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl cursor-pointer select-none group relative overflow-hidden"
+                  style={{
+                    background: isActive ? 'rgba(59,130,246,0.1)' : 'transparent',
+                    border: `1px solid ${isActive ? 'rgba(59,130,246,0.2)' : 'transparent'}`,
+                    boxShadow: isActive ? '0 0 24px rgba(59,130,246,0.1), inset 0 1px 0 rgba(59,130,246,0.05)' : 'none',
+                    transition: 'all 0.25s ease'
+                  }}
+                >
+                  {isActive && (
+                    <motion.div layoutId="admin-nav-pip" className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-7 rounded-r-full" style={{ background: '#3B82F6', boxShadow: '0 0 10px #3B82F6, 0 0 20px rgba(59,130,246,0.5)' }} />
+                  )}
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 relative z-10" style={{ background: isActive ? 'rgba(59,130,246,0.15)' : 'transparent', transition: 'background 0.25s ease' }}>
+                    <tab.icon size={19} strokeWidth={isActive ? 2.3 : 2} style={{ color: isActive ? '#3B82F6' : undefined }} className={isActive ? '' : 'text-slate-400 group-hover:text-slate-100'} />
+                  </div>
+                  <span className={`flex-1 text-left text-[15px] font-semibold leading-tight truncate relative z-10 ${isActive ? 'text-white' : 'text-slate-300 group-hover:text-white'}`} style={{ transition: 'color 0.25s ease', letterSpacing: '-0.01em' }}>
+                    {tab.label}
                   </span>
-                )}
-              </button>
-            )
-          })}
-        </div>
+                  {(tab as any).badge !== undefined && (tab as any).badge > 0 && (
+                    <span className="px-2 py-0.5 text-[10px] font-black rounded-md relative z-10 tracking-wider" style={{ background: 'linear-gradient(135deg, #EF4444, #B91C1C)', color: '#fff', boxShadow: '0 2px 10px rgba(239,68,68,0.5)' }}>
+                      {(tab as any).badge}
+                    </span>
+                  )}
+                </button>
+              )
+            })}
+          </div>
 
-        <div className="p-4 border-t border-slate-100">
-          <button onClick={async () => { await signOut(auth); onLogout(); }}
-            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-slate-600 hover:bg-red-50 hover:text-red-600 transition-colors">
-            <LogOut size={16} /> Sign Out
-          </button>
+          <div className="p-4 border-t relative z-10" style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
+            <button onClick={async () => { await signOut(auth); onLogout(); }}
+              className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl cursor-pointer text-slate-400 hover:text-red-400 font-semibold group transition-all"
+              style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.09)', border: '1px solid rgba(255,255,255,0.09)' }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(239,68,68,0.14)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(239,68,68,0.3)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.09)'; }}
+            >
+              <LogOut size={16} /> Sign Out
+            </button>
+          </div>
         </div>
-      </div>
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden relative">
         {/* Top Header */}
-        <header className="h-20 bg-white border-b border-slate-200 px-8 flex items-center justify-between flex-shrink-0">
+        <header className="h-[76px] flex items-center justify-between px-8 flex-shrink-0 relative z-30"
+                style={{
+                  background: 'linear-gradient(135deg, #070A17 0%, #0B0F26 50%, #070A17 100%)',
+                  borderBottom: '1px solid rgba(255,255,255,0.07)',
+                  boxShadow: '0 1px 0 rgba(255,255,255,0.04), 0 8px 28px -8px rgba(0,0,0,0.45)',
+                }}>
+          <div className="absolute top-0 left-0 right-0 h-[1px] pointer-events-none overflow-hidden"
+               style={{ background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.7), transparent)' }} />
           <div>
-            <h2 className="text-xl font-bold text-slate-900 capitalize">{activeTab.replace('-', ' ')}</h2>
-            <p className="text-sm text-slate-500">Manage and monitor the platform</p>
+            <h2 className="text-xl font-bold text-white capitalize">{activeTab.replace('-', ' ')}</h2>
+            <p className="text-sm text-slate-400 font-medium">Manage and monitor the platform</p>
           </div>
           <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-slate-100 border-2 border-white shadow-sm flex items-center justify-center text-slate-500">
-              <User size={18} />
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white text-[12px] font-black relative"
+                 style={{ background: 'linear-gradient(135deg, #3B82F6, #1D4ED8)', boxShadow: '0 0 14px rgba(59,130,246,0.45), inset 0 1px 0 rgba(255,255,255,0.25)' }}>
+              SA
+              <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2" style={{ borderColor: '#0B0F26' }} />
             </div>
           </div>
         </header>
@@ -626,6 +675,7 @@ export default function SuperAdminDashboard({ onLogout }: SuperAdminDashboardPro
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+      </div>
+    </>
   );
 }

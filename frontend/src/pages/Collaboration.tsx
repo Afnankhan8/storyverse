@@ -174,13 +174,14 @@ export default function Collaboration({ user, onLogout }: Props) {
 
   return (
     <AppShell user={user} onLogout={onLogout}>
-      <div className="flex h-full overflow-hidden">
+      <div className="min-h-full bg-gradient-to-br from-slate-50 via-white to-slate-50 p-6 lg:p-8 flex flex-col">
+        <div className="max-w-[1600px] w-full mx-auto flex-1 flex bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden min-h-[600px] max-h-[calc(100vh-8rem)]">
 
-        {/* Rooms Sidebar */}
-        <div className="w-64 flex-shrink-0 border-r border-slate-100 bg-white flex flex-col">
-          <div className="p-4 border-b border-slate-100">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="font-black text-slate-900" style={{ fontFamily: "'Syne', sans-serif" }}>Collab Rooms</h2>
+          {/* Rooms Sidebar */}
+          <div className="w-72 flex-shrink-0 border-r border-slate-200 bg-slate-50/50 flex flex-col">
+            <div className="p-5 border-b border-slate-200">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-[18px] font-black text-slate-900 tracking-tight">Collab Rooms</h2>
               <button className="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors">
                 <Plus size={14} />
               </button>
@@ -212,14 +213,14 @@ export default function Collaboration({ user, onLogout }: Props) {
           </div>
         </div>
 
-        {/* Main Collab Area */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Main Collab Area */}
+          <div className="flex-1 flex flex-col overflow-hidden bg-white">
 
-          {/* Room Header */}
-          <div className="bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between flex-shrink-0">
-            <div>
-              <div className="flex items-center gap-2.5">
-                <h1 className="font-black text-slate-900" style={{ fontFamily: "'Syne', sans-serif" }}>{activeRoom.title}</h1>
+            {/* Room Header */}
+            <div className="bg-white border-b border-slate-200 px-8 py-6 flex items-center justify-between flex-shrink-0">
+              <div>
+                <div className="flex items-center gap-3">
+                  <h1 className="text-[24px] font-black text-slate-900 tracking-tight">{activeRoom.title}</h1>
                 <span className="flex items-center gap-1.5 text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full font-semibold">
                   <Circle size={6} className="fill-emerald-500 text-emerald-500" /> {onlineCount} online
                 </span>
@@ -244,11 +245,11 @@ export default function Collaboration({ user, onLogout }: Props) {
             </div>
           </div>
 
-          {/* Tabs */}
-          <div className="bg-white border-b border-slate-100 px-6 flex gap-1">
-            {(['comments', 'members', 'history'] as const).map(tab => (
-              <button key={tab} onClick={() => setActiveTab(tab)}
-                className={`px-4 py-3 text-sm font-semibold capitalize transition-all border-b-2 -mb-px ${activeTab === tab ? 'text-blue-600 border-blue-600' : 'text-slate-500 border-transparent hover:text-slate-800'}`}>
+            {/* Tabs */}
+            <div className="bg-white border-b border-slate-200 px-8 flex gap-2">
+              {(['comments', 'members', 'history'] as const).map(tab => (
+                <button key={tab} onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-3 text-[14px] font-semibold capitalize transition-all border-b-2 -mb-px ${activeTab === tab ? 'text-blue-600 border-blue-600' : 'text-slate-500 border-transparent hover:text-slate-800'}`}>
                 {tab === 'comments' && <span className="flex items-center gap-1.5"><MessageSquare size={14} /> Comments <span className="bg-blue-100 text-blue-600 text-xs px-1.5 rounded-md">{activeRoom.comments.length}</span></span>}
                 {tab === 'members' && <span className="flex items-center gap-1.5"><Users size={14} /> Members ({activeRoom.members.length})</span>}
                 {tab === 'history' && <span className="flex items-center gap-1.5"><History size={14} /> Version History</span>}
@@ -256,16 +257,16 @@ export default function Collaboration({ user, onLogout }: Props) {
             ))}
           </div>
 
-          {/* Tab Content */}
-          <div className="flex-1 overflow-y-auto p-5 space-y-4">
+            {/* Tab Content */}
+            <div className="flex-1 overflow-y-auto p-8 space-y-6 bg-slate-50/30">
 
             {activeTab === 'comments' && (
               <>
                 {/* Post comment */}
-                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4">
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
                   <textarea value={newComment} onChange={e => setNewComment(e.target.value)} rows={3}
                     placeholder="Add a comment, suggest an edit, or start a discussion…"
-                    className="w-full text-sm text-slate-900 placeholder-slate-400 focus:outline-none resize-none" />
+                    className="w-full text-[14px] text-slate-900 placeholder-slate-400 focus:outline-none resize-none bg-transparent" />
                   <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-50">
                     <p className="text-xs text-slate-400">Tip: You can mention a page number for context</p>
                     <button onClick={postComment} disabled={!newComment.trim()}
@@ -277,7 +278,7 @@ export default function Collaboration({ user, onLogout }: Props) {
 
                 {/* Comments list */}
                 {activeRoom.comments.map(comment => (
-                  <div key={comment.id} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+                  <div key={comment.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
                     <div className="flex items-start gap-3">
                       <div className={`w-8 h-8 rounded-xl bg-gradient-to-br ${comment.authorColor} flex items-center justify-center text-white text-xs font-black flex-shrink-0`}>
                         {comment.author[0]}
@@ -347,7 +348,7 @@ export default function Collaboration({ user, onLogout }: Props) {
             {activeTab === 'members' && (
               <>
                 {/* Invite */}
-                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
                   <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2"><UserPlus size={16} className="text-blue-600" />Invite Collaborator</h3>
                   {inviteSuccess && (
                     <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-xl p-3 mb-4 text-sm text-emerald-700">
@@ -376,7 +377,7 @@ export default function Collaboration({ user, onLogout }: Props) {
                 </div>
 
                 {/* Members list */}
-                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                   <div className="px-5 py-4 border-b border-slate-50">
                     <h3 className="font-bold text-slate-900">Members ({activeRoom.members.length})</h3>
                   </div>
@@ -423,7 +424,7 @@ export default function Collaboration({ user, onLogout }: Props) {
             )}
 
             {activeTab === 'history' && (
-              <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="px-5 py-4 border-b border-slate-50">
                   <h3 className="font-bold text-slate-900 flex items-center gap-2"><History size={16} className="text-blue-600" />Version History</h3>
                 </div>
@@ -453,6 +454,7 @@ export default function Collaboration({ user, onLogout }: Props) {
             )}
           </div>
         </div>
+      </div>
       </div>
     </AppShell>
   );

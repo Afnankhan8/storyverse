@@ -10,7 +10,7 @@ import {
   Save, Loader2
 } from 'lucide-react';
 import { updatePassword, updateProfile, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth } from '../firebase.ts';
 import AppShell from '../components/AppShell';
 
 interface Props { user?: any; onLogout?: () => void; }

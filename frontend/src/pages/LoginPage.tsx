@@ -6,7 +6,7 @@ import {
   signInWithEmailAndPassword, createUserWithEmailAndPassword,
   GoogleAuthProvider, signInWithPopup,
 } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth } from '../firebase.ts';
 import { sendEmail } from '../emailService';
 
 interface Props {

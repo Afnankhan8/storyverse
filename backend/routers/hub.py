@@ -128,7 +128,7 @@ async def get_hub_feed():
     # Fetch all published books (single-field where = no composite index needed)
     # Sort in Python to avoid Firestore composite index requirement
     docs = db.collection("published_books")\
-             .where("isPublished", "==", True)\
+             .where(filter=firestore.FieldFilter("isPublished", "==", True))\
              .limit(100)\
              .stream()
              
@@ -145,13 +145,36 @@ async def get_hub_feed():
         
     return {"books": books}
 
+@router.get("/books")
+async def list_books(authorId: Optional[str] = None):
+    if not db:
+        raise HTTPException(status_code=500, detail="Database not initialized")
+    
+    query = db.collection("published_books")
+    if authorId:
+        docs = query.where(filter=firestore.FieldFilter("authorId", "==", authorId)).stream()
+    else:
+        docs = query.stream()
+        
+    books = [doc.to_dict() for doc in docs]
+    
+    # Sort by createdAt descending in Python
+    def get_ts(b):
+        ts = b.get("createdAt")
+        if ts and hasattr(ts, "timestamp"):
+            return ts.timestamp()
+        return 0
+    books.sort(key=get_ts, reverse=True)
+    
+    return {"books": books}
+
 @router.get("/user/{username}")
 async def get_user_books(username: str):
     if not db:
         raise HTTPException(status_code=500, detail="Database not initialized")
         
     docs = db.collection("published_books")\
-             .where("author", "==", username)\
+             .where(filter=firestore.FieldFilter("author", "==", username))\
              .stream()
              
     books = [doc.to_dict() for doc in docs]

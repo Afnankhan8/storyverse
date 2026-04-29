@@ -13,6 +13,16 @@ import AppShell from '../components/AppShell';
 
 interface Props { user?: any; onLogout?: () => void; }
 
+const fadeIn = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+};
+
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1 } }
+};
+
 const TRENDING = [
   { id: 't1', title: 'The Midnight Algorithm', author: 'R. Nakamura', genre: 'Sci-Fi', views: 12400, likes: 892, rating: 4.8, reviews: 127, gradient: 'from-sky-500 via-blue-600 to-indigo-700' },
   { id: 't2', title: 'Echoes of Ember', author: 'D. Petrov', genre: 'Fantasy', views: 9800, likes: 743, rating: 4.6, reviews: 89, gradient: 'from-orange-400 via-rose-500 to-pink-600' },
@@ -52,9 +62,6 @@ const TAG_COLORS: Record<string, string> = {
   Productivity: 'bg-amber-50 text-amber-700 border-amber-100',
 };
 
-const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.07 } } };
-const fadeUp = { hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.4, } } };
-
 export default function Community({ user, onLogout }: Props) {
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState<'trending' | 'discussions' | 'authors'>('trending');
@@ -66,69 +73,89 @@ export default function Community({ user, onLogout }: Props) {
 
   return (
     <AppShell user={user} onLogout={onLogout}>
-      <div className="p-6 lg:p-8 max-w-[1280px] mx-auto page-enter">
+      <div className="min-h-full bg-gradient-to-br from-slate-50 via-white to-slate-50">
+        <div className="max-w-[1600px] mx-auto px-6 py-8">
+          <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-8">
 
-        {/* ── Header ── */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <Globe size={16} className="text-blue-500" />
-              <span className="text-xs font-bold text-blue-600 uppercase tracking-wider">Community Hub</span>
-            </div>
-            <h1 className="text-3xl lg:text-4xl font-black text-slate-900 tracking-tight" style={{ fontFamily: "'Syne', sans-serif" }}>Community</h1>
-            <p className="text-slate-500 text-sm mt-1">Discover books, join conversations, and connect with creators worldwide.</p>
-          </div>
-          <div className="relative">
-            <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
-            <input type="text" value={search} onChange={e => setSearch(e.target.value)}
-              placeholder="Search community…"
-              className="pl-9 pr-4 py-2.5 border border-slate-200 bg-white rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-64 shadow-sm" />
-          </div>
-        </div>
-
-        {/* ── Stats Banner ── */}
-        <motion.div variants={stagger} initial="hidden" animate="show"
-          className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-          {[
-            { icon: BookOpen, label: 'Books Published', value: '12,400+', gradient: 'from-blue-500 to-indigo-600', bg: 'bg-blue-50', text: 'text-blue-600', change: '+142 this week' },
-            { icon: Users, label: 'Active Authors', value: '3,200+', gradient: 'from-violet-500 to-purple-600', bg: 'bg-violet-50', text: 'text-violet-600', change: '+38 this week' },
-            { icon: MessageSquare, label: 'Discussions', value: '8,900+', gradient: 'from-pink-500 to-rose-500', bg: 'bg-pink-50', text: 'text-pink-600', change: '+210 this week' },
-            { icon: Star, label: 'Reviews', value: '45,000+', gradient: 'from-amber-400 to-orange-500', bg: 'bg-amber-50', text: 'text-amber-600', change: '+1,200 this week' },
-          ].map((stat, i) => (
-            <motion.div key={stat.label} variants={fadeUp}
-              className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 p-4 lg:p-5">
-              <div className={`w-10 h-10 ${stat.bg} rounded-xl flex items-center justify-center mb-3`}>
-                <stat.icon size={18} className={stat.text} />
-              </div>
-              <div className="text-2xl font-black text-slate-900 mb-0.5">{stat.value}</div>
-              <div className="text-xs text-slate-500 font-medium">{stat.label}</div>
-              <div className="flex items-center gap-1 mt-2 text-[10px] text-emerald-600 font-bold">
-                <ArrowUpRight size={10} />{stat.change}
+            {/* ── Header ── */}
+            <motion.div variants={fadeIn}>
+              <div className="relative overflow-hidden rounded-3xl p-8 lg:p-12"
+                style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)' }}>
+                <div className="absolute inset-0 opacity-30"
+                  style={{ background: 'radial-gradient(circle at 20% 50%, #8B5CF6 0%, transparent 50%)' }} />
+                <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                  <div>
+                    <div className="flex items-center gap-2 mb-4">
+                      <Globe size={18} className="text-violet-400" />
+                      <span className="text-slate-300 text-[13px] font-medium tracking-wide">
+                        Community Hub
+                      </span>
+                    </div>
+                    <h1 className="text-white text-[2.5rem] lg:text-[3.5rem] font-black tracking-tight mb-3">
+                      Discover & Connect<span className="text-violet-400">.</span>
+                    </h1>
+                    <p className="text-slate-300 text-[16px] max-w-2xl leading-relaxed">
+                      Explore trending books, join engaging discussions, and connect with creators worldwide.
+                    </p>
+                  </div>
+                  <div className="relative w-full sm:w-auto">
+                    <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input type="text" value={search} onChange={e => setSearch(e.target.value)}
+                      placeholder="Search community…"
+                      className="pl-11 pr-4 py-3.5 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500 w-full sm:w-80 shadow-sm transition-all" />
+                  </div>
+                </div>
               </div>
             </motion.div>
-          ))}
-        </motion.div>
 
-        {/* ── Tabs ── */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex gap-1 bg-slate-100 rounded-xl p-1">
-            {([
-              { id: 'trending', icon: Flame, label: 'Trending' },
-              { id: 'discussions', icon: MessageSquare, label: 'Discussions' },
-              { id: 'authors', icon: Users, label: 'Authors' },
-            ] as const).map(tab => (
-              <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold transition-all ${activeTab === tab.id ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}>
-                <tab.icon size={14} />{tab.label}
-              </button>
-            ))}
-          </div>
-          {activeTab === 'discussions' && (
-            <button className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20">
-              <Plus size={14} /> New Thread
-            </button>
-          )}
-        </div>
+            {/* ── Stats Banner ── */}
+            <motion.div variants={stagger} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {[
+                { icon: BookOpen, label: 'Books Published', value: '12,400+', color: '#0EA5E9', change: '+142 this week' },
+                { icon: Users, label: 'Active Authors', value: '3,200+', color: '#8B5CF6', change: '+38 this week' },
+                { icon: MessageSquare, label: 'Discussions', value: '8,900+', color: '#F59E0B', change: '+210 this week' },
+                { icon: Star, label: 'Reviews', value: '45,000+', color: '#10B981', change: '+1,200 this week' },
+              ].map((stat, i) => (
+                <motion.div key={stat.label} variants={fadeIn} whileHover={{ y: -4 }}
+                  className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-xl transition-all cursor-pointer">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center`}
+                      style={{ backgroundColor: `${stat.color}15` }}>
+                      <stat.icon size={24} style={{ color: stat.color }} />
+                    </div>
+                  </div>
+                  <div className="text-[2rem] font-black text-slate-900 mb-1">{stat.value}</div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[13px] font-medium text-slate-600">{stat.label}</span>
+                    <span className="text-[11px] font-bold px-2 py-1 rounded-lg"
+                      style={{ backgroundColor: `${stat.color}15`, color: stat.color }}>
+                      <ArrowUpRight size={10} className="inline mr-1" />{stat.change}
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* ── Tabs ── */}
+            <motion.div variants={fadeIn} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex gap-2 bg-white rounded-xl p-1.5 border border-slate-200 shadow-sm">
+                {([
+                  { id: 'trending', icon: Flame, label: 'Trending', color: 'text-orange-500' },
+                  { id: 'discussions', icon: MessageSquare, label: 'Discussions', color: 'text-blue-500' },
+                  { id: 'authors', icon: Users, label: 'Authors', color: 'text-violet-500' },
+                ] as const).map(tab => (
+                  <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-[14px] font-semibold transition-all ${activeTab === tab.id ? 'bg-slate-50 text-slate-900 shadow-sm border border-slate-200' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-50/50'}`}>
+                    <tab.icon size={16} className={activeTab === tab.id ? tab.color : 'text-slate-400'} />{tab.label}
+                  </button>
+                ))}
+              </div>
+              {activeTab === 'discussions' && (
+                <button className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-5 py-2.5 rounded-xl text-[14px] font-bold hover:from-blue-600 hover:to-cyan-600 transition-all shadow-md shadow-blue-500/20 active:scale-95">
+                  <Plus size={16} /> New Thread
+                </button>
+              )}
+            </motion.div>
 
         {/* ── TRENDING ── */}
         <AnimatePresence mode="wait">
@@ -136,8 +163,8 @@ export default function Community({ user, onLogout }: Props) {
             <motion.div key="trending" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
               <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
                 {TRENDING.map((book, i) => (
-                  <motion.div key={book.id} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}
-                    className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group overflow-hidden">
+                  <motion.div key={book.id} variants={fadeIn}
+                    className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 group overflow-hidden">
                     {/* Cover gradient */}
                     <div className={`h-32 bg-gradient-to-br ${book.gradient} relative flex flex-col justify-between p-4`}>
                       <div className="flex items-center justify-between">
@@ -196,10 +223,10 @@ export default function Community({ user, onLogout }: Props) {
           {/* ── DISCUSSIONS ── */}
           {activeTab === 'discussions' && (
             <motion.div key="discussions" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}
-              className="space-y-3">
+              className="space-y-4">
               {DISCUSSIONS.map((d, i) => (
-                <motion.div key={d.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}
-                  className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-slate-200 transition-all p-5 group cursor-pointer">
+                <motion.div key={d.id} variants={fadeIn}
+                  className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-all p-6 group cursor-pointer">
                   <div className="flex items-start gap-4">
                     <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${d.authorGrad} flex items-center justify-center text-white text-sm font-black flex-shrink-0 shadow-sm`}>
                       {d.author[0]}
@@ -245,10 +272,10 @@ export default function Community({ user, onLogout }: Props) {
           {/* ── AUTHORS ── */}
           {activeTab === 'authors' && (
             <motion.div key="authors" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
-              <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-4">
+              <div className="grid sm:grid-cols-2 xl:grid-cols-4 gap-5">
                 {ACTIVE_USERS.map((u, i) => (
-                  <motion.div key={u.name} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.07 }}
-                    className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group overflow-hidden">
+                  <motion.div key={u.name} variants={fadeIn}
+                    className="bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 group overflow-hidden">
                     {/* Gradient header */}
                     <div className={`h-20 bg-gradient-to-br ${u.gradient} relative`}>
                       <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle at 80% 20%, white, transparent 60%)' }} />
@@ -296,6 +323,8 @@ export default function Community({ user, onLogout }: Props) {
             </motion.div>
           )}
         </AnimatePresence>
+          </motion.div>
+        </div>
       </div>
     </AppShell>
   );
