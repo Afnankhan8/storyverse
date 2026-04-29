@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Star, ChevronRight, Search, BookOpen, Flame, PenTool } from 'lucide-react';
 import AppShell from '../components/AppShell';
 
-const API = 'http://localhost:8000';
+const API = "https://your-backend.onrender.com";
 
 const CATEGORIES = ['All', 'Action', 'Adventure', 'Comedy', 'Fantasy', 'Horror', 'Mystery', 'Romance', 'Sci-Fi'];
 const FORMATS = ['Comics', 'Novels', 'Short Reads', 'Audiobooks'];

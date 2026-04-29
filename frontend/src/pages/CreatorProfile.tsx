@@ -9,7 +9,7 @@ import {
 import { auth } from '../firebase.ts';
 import AppShell from '../components/AppShell';
 
-const API = 'http://localhost:8000';
+const API = "https://your-backend.onrender.com";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },

@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import AppShell from '../components/AppShell';
 
-const API = 'http://localhost:8000';
+const API = "https://your-backend.onrender.com";
 
 interface Chapter { id: string; title: string; content: string; }
 interface Props { user?: any; onLogout?: () => void; }

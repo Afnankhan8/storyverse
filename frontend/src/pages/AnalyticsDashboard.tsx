@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import AppShell from '../components/AppShell';
 
-const API = 'http://localhost:8000';
+const API = "https://your-backend.onrender.com";
 
 /* ═══════════════════════════════════════════════════════════
    TYPES & INTERFACES

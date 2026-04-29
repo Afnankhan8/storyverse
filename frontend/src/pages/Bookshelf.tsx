@@ -9,7 +9,7 @@ import { BookOpen, Trash2, Clock, Sparkles, BookMarked, Search, Grid3X3, List } 
 import { auth } from '../firebase.ts';
 import AppShell from '../components/AppShell';
 
-const API = 'http://localhost:8000';
+const API = "https://your-backend.onrender.com";
 
 export default function Bookshelf({ user, onLogout }: { user?: any; onLogout?: () => void }) {
   const [saved, setSaved] = useState<any[]>([]);
