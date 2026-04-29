@@ -12,8 +12,7 @@ import 'react-pdf/dist/Page/TextLayer.css';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-const API = 'http://localhost:8000'; // Default port for local dev
-
+const API = 'https://comixnova-api.onrender.com/api/story';
 export default function ComicReader() {
   const { id } = useParams();
   const navigate = useNavigate();
